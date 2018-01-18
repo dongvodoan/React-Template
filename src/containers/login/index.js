@@ -5,6 +5,7 @@ import { connect }            from 'react-redux';
 import * as viewsActions      from '../../actions/viewAction';
 import * as userAuthActions   from '../../actions/userAuthAction';
 import Login                  from './Login';
+import { translate } from 'react-i18next'
 
 const mapStateToProps = (state) => {
   return {
@@ -36,4 +37,4 @@ const mapDispatchToProps = (dispatch) => {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(Login);
+)(translate('common')(Login));
