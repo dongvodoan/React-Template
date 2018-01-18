@@ -1,14 +1,21 @@
+// @flow weak
+import type {
+    Storage,
+    TokenKey,
+    UserInfoKey,
+    STORES_TYPES
+}                 from './types';
 import decode from 'jwt-decode';
 import moment from 'moment';
 
-const TOKEN_KEY = 'token';
-const USER_INFO = 'userInfo';
+const TOKEN_KEY: string = 'x-access-token';
+const USER_INFO: string = 'userInfo';
 
-const APP_PERSIST_STORES_TYPES = [
+const APP_PERSIST_STORES_TYPES: Array<STORES_TYPES> = [
     'localStorage',
     'sessionStorage'
 ];
-
+// eslint-disable-next-line
 const parse     = JSON.parse;
 const stringify = JSON.stringify;
 
@@ -26,7 +33,10 @@ export const auth = {
      * @param {any} [tokenKey=TOKEN_KEY]  optionnal parameter to specify a token key
      * @returns {string} token value
      */
-    getToken: (fromStorage = APP_PERSIST_STORES_TYPES[0], tokenKey = TOKEN_KEY) => {
+    getToken(
+        fromStorage: Storage  = APP_PERSIST_STORES_TYPES[0],
+        tokenKey: TokenKey = TOKEN_KEY
+    ): ?string {
         // localStorage:
         if (fromStorage === APP_PERSIST_STORES_TYPES[0]) {
             return (localStorage && localStorage.getItem(tokenKey)) || null;
@@ -47,7 +57,11 @@ export const auth = {
      * @param {any} [tokenKey='token'] token key
      * @returns {boolean} success/failure flag
      */
-    setToken: (value, toStorage = APP_PERSIST_STORES_TYPES[0], tokenKey = TOKEN_KEY) => {
+    setToken(
+        value: string = '',
+        toStorage: Storage = APP_PERSIST_STORES_TYPES[0],
+        tokenKey: TokenKey = TOKEN_KEY
+    ): ?string {
         if (!value || value.length <= 0) {
             return;
         }
@@ -87,7 +101,10 @@ export const auth = {
      * @param {any} [tokenKey=TOKEN_KEY] token key
      * @returns {bool} is authenticed response
      */
-    isAuthenticated: (fromStorage = APP_PERSIST_STORES_TYPES[0], tokenKey = TOKEN_KEY) => {
+    isAuthenticated(
+        fromStorage: Storage = APP_PERSIST_STORES_TYPES[0],
+        tokenKey: TokenKey = TOKEN_KEY
+    ): boolean {
         // localStorage:
         if (fromStorage === APP_PERSIST_STORES_TYPES[0]) {
             if ((localStorage && localStorage.getItem(tokenKey))) {
@@ -115,7 +132,10 @@ export const auth = {
      * @param {any} [tokenKey='token'] token key
      * @returns {bool} success/failure flag
      */
-    clearToken: (storage = APP_PERSIST_STORES_TYPES[0], tokenKey = TOKEN_KEY) => {
+    clearToken(
+        storage: Storage  = APP_PERSIST_STORES_TYPES[0],
+        tokenKey: TokenKey = TOKEN_KEY
+    ): boolean {
         // localStorage:
         if (localStorage && localStorage[tokenKey]) {
             localStorage.removeItem(tokenKey);
@@ -136,7 +156,9 @@ export const auth = {
      * @param {string} encodedToken - base 64 token received from server and stored in local storage
      * @returns {date | null} returns expiration date or null id expired props not found in decoded token
      */
-    getTokenExpirationDate: (encodedToken) => {
+    getTokenExpirationDate(
+        encodedToken: any
+    ): Date {
         if (!encodedToken) {
             return new Date(0); // is expired
         }
@@ -156,9 +178,12 @@ export const auth = {
      * @param {string} encodedToken - base 64 token received from server and stored in local storage
      * @returns {bool} returns true if expired else false
      */
-    isExpiredToken: (encodedToken) => {
+    isExpiredToken(
+        encodedToken: any
+    ): boolean {
+        if (!encodedToken)
+            return true;
         const expirationDate = this.getTokenExpirationDate(encodedToken);
-
         const rightNow       = moment();
         const isExpiredToken = moment(rightNow).isAfter(moment(expirationDate));
 
@@ -175,14 +200,19 @@ export const auth = {
      * @param {any} [userInfoKey='userInfo']  optionnal parameter to specify a token key
      * @returns {string} token value
      */
-    getUserInfo: (fromStorage = APP_PERSIST_STORES_TYPES[0], userInfoKey = USER_INFO) => {
+    getUserInfo(
+        fromStorage: Storage = APP_PERSIST_STORES_TYPES[0],
+        userInfoKey: UserInfoKey = USER_INFO
+    ): ?string {
         // localStorage:
         if (fromStorage === APP_PERSIST_STORES_TYPES[0]) {
-            return (localStorage && parse(localStorage.getItem(userInfoKey))) || null;
+            let data: any = localStorage.getItem(userInfoKey);
+            return (localStorage && parse(data)) || null;
         }
         // sessionStorage:
         if (fromStorage === APP_PERSIST_STORES_TYPES[1]) {
-            return (sessionStorage && parse(sessionStorage.getItem(userInfoKey))) || null;
+            let data: any = localStorage.getItem(userInfoKey);
+            return (sessionStorage && parse(data)) || null;
         }
         // default:
         return null;
@@ -196,7 +226,11 @@ export const auth = {
      * @param {any} [userInfoKey='userInfo'] token key
      * @returns {boolean} success/failure flag
      */
-    setUserInfo: (value = null, toStorage = APP_PERSIST_STORES_TYPES[0], userInfoKey = USER_INFO) => {
+    setUserInfo(
+        value: string = '',
+        toStorage: Storage = APP_PERSIST_STORES_TYPES[0],
+        userInfoKey: UserInfoKey = USER_INFO
+    ): any {
         if (!value || value.length <= 0) {
             return;
         }
@@ -220,7 +254,9 @@ export const auth = {
      * @param {string} [userInfoKey='userInfo'] token key
      * @returns {bool} success/failure flag
      */
-    clearUserInfo: (userInfoKey = USER_INFO) => {
+    clearUserInfo(
+        userInfoKey: UserInfoKey = USER_INFO
+    ): any {
         // localStorage:
         if (localStorage && localStorage[userInfoKey]) {
             localStorage.removeItem(userInfoKey);
@@ -231,11 +267,16 @@ export const auth = {
         }
     },
 
+
+    // /////////////////////////////////////////////////////////////
+    // COMMON
+    // /////////////////////////////////////////////////////////////
+
     /**
      * forget me method: clear all
      * @returns {bool} success/failure flag
      */
-    clearAllAppStorage: () => {
+    clearAllAppStorage(): any {
         if (localStorage) {
             localStorage.clear();
         }

@@ -1,28 +1,52 @@
+// @flow weak
 import React, { Component } from 'react';
-import './App.css';
-import { BrowserRouter, Route } from "react-router-dom";
+import {
+    // Router, // using now ConnectedRouter from react-router-redux v5.x (the only one compatible react-router 4)
+    Switch,
+    Route
+}                               from 'react-router-dom';
+import { Provider }             from 'react-redux';
+import { ConnectedRouter }      from 'react-router-redux';
+import { history }              from './store/configureStore';
 
-import HomeView from './views/Home';
-import { CatalogView, ProductView } from './views/Catalog';
-import { NestedView } from './views/Nested';
-import NavBar from './components/NavBar';
-import PrivateRoute from './components/PrivateRoute';
-import Protected from './views/Protected';
+import configureStore           from './store/configureStore.dev';
 
-class App extends Component {
+import PageNotFound             from './views/pageNotFound';
+import PageProtected            from './views/protected';
+import {
+    ScrollTop,
+    PrivateRoute
+}                               from './components';
+import Login                    from './views/login/index';
+import Home                     from './views/home';
+
+
+const store = configureStore();
+
+// #region flow types
+type
+Props = any;
+type
+State = any;
+// #endregion
+
+class App extends Component<Props, State> {
   render() {
     return (
-        <BrowserRouter>
-            <div>
-                <NavBar />
-                <Route exact path="/" component={HomeView} />
-                <Route path="/another" component={() => <div>yo!</div>} />
-                <Route path="/catalog" component={CatalogView} />
-                <Route path="/product/:id" component={ProductView} />
-                <Route path="/nested" component={NestedView} />
-                <PrivateRoute path="/protected" component={Protected} />
-            </div>
-        </BrowserRouter>
+      <Provider store={store}>
+          <div>
+              <ConnectedRouter history={history}>
+                  <ScrollTop>
+                      <Switch>
+                          <Route exact path="/" component={Home}/>
+                          <Route path="/login" component={Login} />
+                          <PrivateRoute path="/protected" component={PageProtected} />
+                          <Route component={PageNotFound} />
+                      </Switch>
+                  </ScrollTop>
+              </ConnectedRouter>
+          </div>
+      </Provider>
     );
   }
 }

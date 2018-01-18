@@ -3,3 +3,13 @@ body {
   padding: 0;
   font-family: sans-serif;
 }
+.not-found {
+  color: red;
+}
+.progress-xs{
+  max-height: 10px;
+}
+.progress-xxs{
+}
+.progress-sm{
+}
