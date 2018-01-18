@@ -8,7 +8,7 @@ import Login                  from './Login';
 
 const mapStateToProps = (state) => {
   return {
-    // views:
+    // containers:
     currentView:  state.views.currentView,
 
     // useAuth:
@@ -24,7 +24,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return bindActionCreators(
     {
-      // views:
+      // containers:
       ...viewsActions,
       // userAuth:
       ...userAuthActions

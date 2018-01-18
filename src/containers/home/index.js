@@ -14,7 +14,7 @@ const mapDispatchToProps = (dispatch) => {
     return {
         actions : bindActionCreators(
             {
-                //  views
+                //  containers
                 ...viewActions
             },
             dispatch)

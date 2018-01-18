@@ -8,7 +8,7 @@ import Protected              from './Protected';
 
 const mapStateToProps = (state) => {
   return {
-    // views
+    // containers
     currentView:  state.views.currentView
   };
 };
@@ -16,7 +16,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return bindActionCreators(
     {
-      // views
+      // containers
       enterProtected: viewsActions.enterProtected,
       leaveProtected: viewsActions.leaveProtected
     },
