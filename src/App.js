@@ -11,14 +11,14 @@ import { history }              from './store/configureStore';
 
 import configureStore           from './store/configureStore.dev';
 
-import PageNotFound             from './views/pageNotFound';
-import PageProtected            from './views/protected';
+import PageNotFound             from './containers/pageNotFound';
+import PageProtected            from './containers/protected';
 import {
     ScrollTop,
     PrivateRoute
 }                               from './components';
-import Login                    from './views/login/index';
-import Home                     from './views/home';
+import Login                    from './containers/login/index';
+import Home                     from './containers/home';
 
 
 const store = configureStore();

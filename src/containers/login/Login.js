@@ -21,7 +21,7 @@ Props = {
   location: any,
   history: any,
 
-  // views props:
+  // containers props:
   currentView: string,
   errorMessage: string,
   enterLogin: () => void,
@@ -51,7 +51,7 @@ class Login extends PureComponent<Props, State> {
     location: PropTypes.object.isRequired,
     history:  PropTypes.object.isRequired,
 
-    // views props:
+    // containers props:
     currentView: PropTypes.string.isRequired,
     enterLogin:  PropTypes.func.isRequired,
     leaveLogin:  PropTypes.func.isRequired,

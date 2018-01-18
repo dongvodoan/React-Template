@@ -21,7 +21,7 @@ class Protected extends PureComponent<Props, State> {
     location: PropTypes.object.isRequired,
     history:  PropTypes.object.isRequired,
 
-    // views:
+    // containers:
     currentView:      PropTypes.string.isRequired,
     enterProtected:   PropTypes.func.isRequired,
     leaveProtected:   PropTypes.func.isRequired
