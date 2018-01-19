@@ -114,125 +114,125 @@ class Login extends PureComponent<Props, State> {
     } = this.props;
 
     return (
-        <I18n ns="translations">
-          {
-          (t, { i18n }) => (
-            <div className="content">
-              <Row>
-                <Col
-                  md={4}
-                  mdOffset={4}
-                  xs={10}
-                  xsOffset={1}
-                >
-                    <button onClick={() => i18n.changeLanguage('en')}>en</button>
-                    <button onClick={() => i18n.changeLanguage('vn')}>vn</button>
-                    <button onClick={() => i18n.changeLanguage('ja')}>ja</button>
-                  <form
-                    className="form-horizontal"
-                    noValidate>
-                    <fieldset>
-                      <legend
-                        className="text-center"
-                      >
-                        <h1>
-                          <i className="fa fa-3x fa-user-circle" aria-hidden="true" />
-                        </h1>
-                        <h2>
-                            {t('login')}
-                        </h2>
-                      </legend>
-                      <div className="text-center">{isError ? <span className="text-danger">{errorMessage}</span>: null}</div>
-                      <div className="form-group">
-                        <label
-                          htmlFor="inputEmail"
-                          className="col-lg-2 control-label">
-                            {t('email')}
-                        </label>
-                        <div className="col-lg-10">
-                          <input
-                            type="text"
-                            className="form-control"
-                            id="inputEmail"
-                            placeholder={t('email')}
-                            value={email}
-                            onChange={this.handlesOnEmailChange}
-                          />
-                        </div>
-                      </div>
-
-                      <div className="form-group">
-                        <label
-                          htmlFor="inputPassword"
-                          className="col-lg-2 control-label">
-                            {t('password')}
-                        </label>
-                        <div className="col-lg-10">
-                          <input
-                            type="password"
-                            className="form-control"
-                            id="inputPassword"
-                            placeholder={t('password')}
-                            value={password}
-                            onChange={this.handlesOnPasswordChange}
-                          />
-                        </div>
-                      </div>
-                      <div className="form-group">
-                        <Col
-                          lg={10}
-                          lgOffset={2}
-                        >
-                          <Button
-                            className="login-button btn-block"
-                            bsStyle="primary"
-                            disabled={isLogging}
-                            onClick={this.handlesOnLogin}>
-                            {
-                              isLogging
-                                ?
-                                <span>
-                                    login in...
-                                    &nbsp;
-                                  <i
-                                    className="fa fa-spinner fa-pulse fa-fw"
-                                  />
-                                </span>
-                                :
-                                <span>
-                                    {t('login')}
-                                </span>
-                            }
-                          </Button>
-                        </Col>
-                      </div>
-                    </fieldset>
-                  </form>
-                </Col>
-              </Row>
-              <Row>
-                <Col
-                  md={4}
-                  mdOffset={4}
-                  xs={10}
-                  xsOffset={1}
-                >
-                  <div
-                    className="pull-right"
-                  >
-                    <Button
-                      bsStyle="default"
-                      onClick={this.goHome}
+      <I18n ns="translations">
+        {
+        (t, { i18n }) => (
+          <div className="content">
+            <Row>
+              <Col
+                md={4}
+                mdOffset={4}
+                xs={10}
+                xsOffset={1}
+              >
+                <button onClick={() => i18n.changeLanguage('en')}>en</button>
+                <button onClick={() => i18n.changeLanguage('vn')}>vn</button>
+                <button onClick={() => i18n.changeLanguage('ja')}>ja</button>
+                <form
+                  className="form-horizontal"
+                  noValidate>
+                  <fieldset>
+                    <legend
+                      className="text-center"
                     >
-                        {t('back_home')}
-                    </Button>
-                  </div>
-                </Col>
-              </Row>
-            </div>
-            )
-          }
-      </I18n>
+                      <h1>
+                        <i className="fa fa-3x fa-user-circle" aria-hidden="true" />
+                      </h1>
+                      <h2>
+                          {t('login')}
+                      </h2>
+                    </legend>
+                    <div className="text-center">{isError ? <span className="text-danger">{errorMessage}</span>: null}</div>
+                    <div className="form-group">
+                      <label
+                        htmlFor="inputEmail"
+                        className="col-lg-2 control-label">
+                          {t('email')}
+                      </label>
+                      <div className="col-lg-10">
+                        <input
+                          type="text"
+                          className="form-control"
+                          id="inputEmail"
+                          placeholder={t('email')}
+                          value={email}
+                          onChange={this.handlesOnEmailChange}
+                        />
+                      </div>
+                    </div>
+
+                    <div className="form-group">
+                      <label
+                        htmlFor="inputPassword"
+                        className="col-lg-2 control-label">
+                          {t('password')}
+                      </label>
+                      <div className="col-lg-10">
+                        <input
+                          type="password"
+                          className="form-control"
+                          id="inputPassword"
+                          placeholder={t('password')}
+                          value={password}
+                          onChange={this.handlesOnPasswordChange}
+                        />
+                      </div>
+                    </div>
+                    <div className="form-group">
+                      <Col
+                        lg={10}
+                        lgOffset={2}
+                      >
+                        <Button
+                          className="login-button btn-block"
+                          bsStyle="primary"
+                          disabled={isLogging}
+                          onClick={this.handlesOnLogin}>
+                          {
+                            isLogging
+                              ?
+                              <span>
+                                  login in...
+                                  &nbsp;
+                                <i
+                                  className="fa fa-spinner fa-pulse fa-fw"
+                                />
+                              </span>
+                              :
+                              <span>
+                                  {t('login')}
+                              </span>
+                          }
+                        </Button>
+                      </Col>
+                    </div>
+                  </fieldset>
+                </form>
+              </Col>
+            </Row>
+            <Row>
+              <Col
+                md={4}
+                mdOffset={4}
+                xs={10}
+                xsOffset={1}
+              >
+                <div
+                  className="pull-right"
+                >
+                  <Button
+                    bsStyle="default"
+                    onClick={this.goHome}
+                  >
+                      {t('back_home')}
+                  </Button>
+                </div>
+              </Col>
+            </Row>
+          </div>
+          )
+        }
+    </I18n>
     );
   }
   // #endregion
