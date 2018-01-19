@@ -60,6 +60,12 @@ const validate = values => {
 }
 
 class Login extends PureComponent<Props, State> {
+  constructor(props) {
+    super(props);
+
+    this.renderField = this.renderField.bind(this);
+  }
+
   // #region propTypes
   static propTypes = {
     // react-router 4:
@@ -117,7 +123,7 @@ class Login extends PureComponent<Props, State> {
       history.push('/');
   }
 
-  renderField = ({ input, label, type, meta: { touched, error, warning } }) => (
+  renderField = ({ input, label, type, fieldValue, meta: { touched, error, warning } }) => (
     <div className="form-group">
       <label
         className="col-lg-2 control-label"
@@ -131,6 +137,10 @@ class Login extends PureComponent<Props, State> {
           type={type}
           className='form-control'
           id={label}
+          value={fieldValue}
+          onChange={e => {
+            this.setState({ [type]: e.target.value })
+          }}
         />
         {touched && ((error && <span>{error}</span>) || (warning && <span>{warning}</span>))}
       </div>
@@ -175,43 +185,8 @@ class Login extends PureComponent<Props, State> {
 
                 <div className="text-center">{isError ? <span className="text-danger">{errorMessage}</span>: null}</div>
 
-                <Field name="email" type="email" component={this.renderField.bind(this)} label="Email"/>
-                <Field name="password" type="password" component={this.renderField} label="Password"/>
-                {/*<div className="form-group">*/}
-                  {/*<label*/}
-                    {/*htmlFor="inputEmail"*/}
-                    {/*className="col-lg-2 control-label">*/}
-                    {/*Email*/}
-                  {/*</label>*/}
-                  {/*<div className="col-lg-10">*/}
-                    {/*<input*/}
-                      {/*type="text"*/}
-                      {/*className="form-control"*/}
-                      {/*id="inputEmail"*/}
-                      {/*placeholder="Email"*/}
-                      {/*value={email}*/}
-                      {/*onChange={this.handlesOnEmailChange}*/}
-                    {/*/>*/}
-                  {/*</div>*/}
-                {/*</div>*/}
-
-                {/*<div className="form-group">*/}
-                  {/*<label*/}
-                    {/*htmlFor="inputPassword"*/}
-                    {/*className="col-lg-2 control-label">*/}
-                    {/*Password*/}
-                  {/*</label>*/}
-                  {/*<div className="col-lg-10">*/}
-                    {/*<input*/}
-                      {/*type="password"*/}
-                      {/*className="form-control"*/}
-                      {/*id="inputPassword"*/}
-                      {/*placeholder="Password"*/}
-                      {/*value={password}*/}
-                      {/*onChange={this.handlesOnPasswordChange}*/}
-                    {/*/>*/}
-                  {/*</div>*/}
-                {/*</div>*/}
+                <Field name="email" type="email" component={this.renderField} label="Email" fieldValue={email}/>
+                <Field name="password" type="password" component={this.renderField} label="Password" fieldValue={password}/>
                 <div className="form-group">
                   <Col
                     lg={10}
@@ -268,31 +243,6 @@ class Login extends PureComponent<Props, State> {
   }
   // #endregion
 
-  // #region form inputs change callbacks
-  handlesOnEmailChange = (
-    event: SyntheticEvent<>
-  ) => {
-    if (event) {
-      event.preventDefault();
-      let target: Object = event.target;
-      // should add some validator before setState in real use cases
-      this.setState({ email: target.value.trim() });
-    }
-  }
-
-  handlesOnPasswordChange = (
-    event: SyntheticEvent<>
-  ) => {
-    if (event) {
-      event.preventDefault();
-      let target: Object = event.target;
-      // should add some validator before setState in real use cases
-      this.setState({ password: target.value.trim() });
-    }
-  }
-  // #endregion
-
-
   // #region on login button click callback
   handlesOnLogin = async (
     event: SyntheticEvent<>
@@ -338,6 +288,6 @@ class Login extends PureComponent<Props, State> {
 }
 
 export default reduxForm({
-  form: 'syncValidation',  // a unique identifier for this form
-  validate,                // <--- validation function given to redux-form
+  form: 'syncValidation',
+  validate,
 })(Login)

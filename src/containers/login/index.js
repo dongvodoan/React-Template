@@ -17,8 +17,7 @@ const mapStateToProps = (state) => {
     isError:         state.userAuth.isError,
     errorMessage:    state.userAuth.errorMessage,
     isFetching:      state.userAuth.isFetching,
-    isLogging:       state.userAuth.isLogging
-
+    isLogging:       state.userAuth.isLogging,
   };
 };
 
