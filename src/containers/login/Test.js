@@ -1,8 +1,7 @@
-import React, { Component } from 'react'
+import React from 'react'
 import { Field, reduxForm } from 'redux-form'
 
 const validate = values => {
-  console.log('hihi')
   const errors = {}
   if (!values.username) {
     errors.username = 'Required'

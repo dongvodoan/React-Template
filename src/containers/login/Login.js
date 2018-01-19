@@ -10,12 +10,13 @@ import {
   Col,
   Button
 }                     from 'react-bootstrap';
+import { Field, reduxForm } from 'redux-form';
 // import auth           from '../../services/auth';
 // #endregion
 
 // #region flow types
 type
-Props = {
+  Props = {
   // react-router 4:
   match: any,
   location: any,
@@ -37,11 +38,26 @@ Props = {
 };
 
 type
-State = {
+  State = {
   email: string,
   password: string
 };
 // #endregion
+
+const validate = values => {
+  const errors = {}
+  if (!values.email) {
+    errors.email = 'Email is required'
+  } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)) {
+    errors.email = 'Invalid email address'
+  }
+  if (!values.password) {
+    errors.password = 'Password is required'
+  } else if (values.password.length < 6) {
+    errors.password = 'Password is at least 6 character'
+  }
+  return errors
+}
 
 class Login extends PureComponent<Props, State> {
   // #region propTypes
@@ -78,6 +94,7 @@ class Login extends PureComponent<Props, State> {
     password:       ''
   };
 
+
   // #region lifecycle methods
   componentDidMount() {
     const {
@@ -95,10 +112,30 @@ class Login extends PureComponent<Props, State> {
   }
 
   componentWillReceiveProps(nextProps) {
-      const { history } = this.props;
-      if (nextProps.isAuthenticated)
-          history.push('/');
+    const { history } = this.props;
+    if (nextProps.isAuthenticated)
+      history.push('/');
   }
+
+  renderField = ({ input, label, type, meta: { touched, error, warning } }) => (
+    <div className="form-group">
+      <label
+        className="col-lg-2 control-label"
+      >
+        {label}
+      </label>
+      <div className="col-lg-10">
+        <input
+          {...input}
+          placeholder={label}
+          type={type}
+          className='form-control'
+          id={label}
+        />
+        {touched && ((error && <span>{error}</span>) || (warning && <span>{warning}</span>))}
+      </div>
+    </div>
+  )
 
   render() {
     const {
@@ -135,42 +172,46 @@ class Login extends PureComponent<Props, State> {
                     Login
                   </h2>
                 </legend>
-                <div className="text-center">{isError ? <span className="text-danger">{errorMessage}</span>: null}</div>
-                <div className="form-group">
-                  <label
-                    htmlFor="inputEmail"
-                    className="col-lg-2 control-label">
-                    Email
-                  </label>
-                  <div className="col-lg-10">
-                    <input
-                      type="text"
-                      className="form-control"
-                      id="inputEmail"
-                      placeholder="Email"
-                      value={email}
-                      onChange={this.handlesOnEmailChange}
-                    />
-                  </div>
-                </div>
 
-                <div className="form-group">
-                  <label
-                    htmlFor="inputPassword"
-                    className="col-lg-2 control-label">
-                    Password
-                  </label>
-                  <div className="col-lg-10">
-                    <input
-                      type="password"
-                      className="form-control"
-                      id="inputPassword"
-                      placeholder="Password"
-                      value={password}
-                      onChange={this.handlesOnPasswordChange}
-                    />
-                  </div>
-                </div>
+                <div className="text-center">{isError ? <span className="text-danger">{errorMessage}</span>: null}</div>
+
+                <Field name="email" type="email" component={this.renderField.bind(this)} label="Email"/>
+                <Field name="password" type="password" component={this.renderField} label="Password"/>
+                {/*<div className="form-group">*/}
+                  {/*<label*/}
+                    {/*htmlFor="inputEmail"*/}
+                    {/*className="col-lg-2 control-label">*/}
+                    {/*Email*/}
+                  {/*</label>*/}
+                  {/*<div className="col-lg-10">*/}
+                    {/*<input*/}
+                      {/*type="text"*/}
+                      {/*className="form-control"*/}
+                      {/*id="inputEmail"*/}
+                      {/*placeholder="Email"*/}
+                      {/*value={email}*/}
+                      {/*onChange={this.handlesOnEmailChange}*/}
+                    {/*/>*/}
+                  {/*</div>*/}
+                {/*</div>*/}
+
+                {/*<div className="form-group">*/}
+                  {/*<label*/}
+                    {/*htmlFor="inputPassword"*/}
+                    {/*className="col-lg-2 control-label">*/}
+                    {/*Password*/}
+                  {/*</label>*/}
+                  {/*<div className="col-lg-10">*/}
+                    {/*<input*/}
+                      {/*type="password"*/}
+                      {/*className="form-control"*/}
+                      {/*id="inputPassword"*/}
+                      {/*placeholder="Password"*/}
+                      {/*value={password}*/}
+                      {/*onChange={this.handlesOnPasswordChange}*/}
+                    {/*/>*/}
+                  {/*</div>*/}
+                {/*</div>*/}
                 <div className="form-group">
                   <Col
                     lg={10}
@@ -186,7 +227,7 @@ class Login extends PureComponent<Props, State> {
                           ?
                           <span>
                               login in...
-                              &nbsp;
+                            &nbsp;
                             <i
                               className="fa fa-spinner fa-pulse fa-fw"
                             />
@@ -233,7 +274,7 @@ class Login extends PureComponent<Props, State> {
   ) => {
     if (event) {
       event.preventDefault();
-        let target: Object = event.target;
+      let target: Object = event.target;
       // should add some validator before setState in real use cases
       this.setState({ email: target.value.trim() });
     }
@@ -296,4 +337,7 @@ class Login extends PureComponent<Props, State> {
   // #endregion
 }
 
-export default Login;
+export default reduxForm({
+  form: 'syncValidation',  // a unique identifier for this form
+  validate,                // <--- validation function given to redux-form
+})(Login)
