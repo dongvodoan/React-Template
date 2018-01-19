@@ -1,5 +1,6 @@
 // @flow weak
 import { routerReducer }    from 'react-router-redux';
+import { reducer as reduxFormReducer } from 'redux-form';
 import { combineReducers }  from 'redux';
 
 import views                from './views';
@@ -12,5 +13,6 @@ export const reducers = {
 
 export default combineReducers({
     ...reducers,
-    routing: routerReducer
+    routing: routerReducer,
+    form: reduxFormReducer,
 });
