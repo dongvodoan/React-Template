@@ -123,27 +123,29 @@ class Login extends PureComponent<Props, State> {
       history.push('/');
   }
 
-  renderField = ({ input, label, type, fieldValue, meta: { touched, error, warning } }) => (
-    <div className="form-group">
-      <label
-        className="col-lg-2 control-label"
-      >
-        {label}
-      </label>
-      <div className="col-lg-10">
-        <input
-          {...input}
-          placeholder={label}
-          type={type}
-          className='form-control'
-          id={label}
-          value={fieldValue}
-          onChange={e => this.setState({ [type]: e.target.value.trim() })}
-        />
-        {touched && ((error && <span>{error}</span>) || (warning && <span>{warning}</span>))}
+  renderField = ({ input, label, type, fieldValue, test, meta: { touched, error, warning } }) => {
+    return (
+      <div className="form-group">
+        <label
+          className="col-lg-2 control-label"
+        >
+          {label}
+        </label>
+        <div className="col-lg-10">
+          <input
+            {...input}
+            placeholder={label}
+            type={type}
+            className='form-control'
+            id={label}
+            value={fieldValue}
+            onChange={e => this.setState({ [type]: e.target.value.trim() })}
+          />
+          {touched && ((error && <span>{test(error)}</span>) || (warning && <span>{warning}</span>))}
+        </div>
       </div>
-    </div>
-  )
+    )
+  }
 
   render() {
     const {
@@ -190,8 +192,8 @@ class Login extends PureComponent<Props, State> {
 
                       <div className="text-center">{isError ? <span className="text-danger">{errorMessage}</span>: null}</div>
 
-                      <Field name="email" type="email" component={this.renderField} label={t('Email')} fieldValue={email}/>
-                      <Field name="password" type="password" component={this.renderField} label={t('Password')} fieldValue={password}/>
+                      <Field name="email" type="email" component={this.renderField} label={t('email')} fieldValue={email}/>
+                      <Field name="password" type="password" component={this.renderField} label={t('password')} fieldValue={password}/>
                       <div className="form-group">
                         <Col
                           lg={10}
@@ -206,7 +208,7 @@ class Login extends PureComponent<Props, State> {
                               isLogging
                                 ?
                                 <span>
-                              login in...
+                                  {t('login in...')}
                                   &nbsp;
                                   <i
                                     className="fa fa-spinner fa-pulse fa-fw"
@@ -214,7 +216,7 @@ class Login extends PureComponent<Props, State> {
                           </span>
                           :
                           <span>
-                            Login
+                            {t('login')}
                           </span>
                             }
                           </Button>
@@ -238,7 +240,7 @@ class Login extends PureComponent<Props, State> {
                       bsStyle="default"
                       onClick={this.goHome}
                     >
-                      Back to home
+                      {t('back to home')}
                     </Button>
                   </div>
                 </Col>
