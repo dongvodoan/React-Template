@@ -4,7 +4,8 @@ import { bindActionCreators } from 'redux';
 import { connect }            from 'react-redux';
 import * as viewsActions      from '../../actions/viewAction';
 import * as userAuthActions   from '../../actions/userAuthAction';
-import Login                  from './Login';
+// import Login                  from './test';
+import Login from './SyncValidationForm';
 
 const mapStateToProps = (state) => {
   return {
