@@ -11,6 +11,7 @@ import {
   Button
 }                     from 'react-bootstrap';
 import { Field, reduxForm } from 'redux-form';
+import {I18n} from 'react-i18next';
 // import auth           from '../../services/auth';
 // #endregion
 
@@ -45,6 +46,7 @@ type
 // #endregion
 
 const validate = values => {
+  console.log(values);
   const errors = {}
   if (!values.email) {
     errors.email = 'Email is required'
@@ -150,120 +152,130 @@ class Login extends PureComponent<Props, State> {
     } = this.props;
 
     return (
-      <div className="content">
-        <Row>
-          <Col
-            md={4}
-            mdOffset={4}
-            xs={10}
-            xsOffset={1}
-          >
-            <form
-              className="form-horizontal"
-              noValidate>
-              <fieldset>
-                <legend
-                  className="text-center"
+      <I18n ns="translations">
+        {
+          (t, { i18n }) => (
+
+            <div className="content">
+              <Row>
+                <Col
+                  md={4}
+                  mdOffset={4}
+                  xs={10}
+                  xsOffset={1}
                 >
-                  <h1>
-                    <i className="fa fa-3x fa-user-circle" aria-hidden="true" />
-                  </h1>
-                  <h2>
-                    Login
-                  </h2>
-                </legend>
+                  <button onClick={() => i18n.changeLanguage('en')}>en</button>
+                  <button onClick={() => i18n.changeLanguage('vn')}>vn</button>
+                  <button onClick={() => i18n.changeLanguage('ja')}>ja</button>
+                  <form
+                    className="form-horizontal"
+                    noValidate>
+                    <fieldset>
+                      <legend
+                        className="text-center"
+                      >
+                        <h1>
+                          <i className="fa fa-3x fa-user-circle" aria-hidden="true" />
+                        </h1>
+                        <h2>
+                          {t("login")}
+                        </h2>
+                      </legend>
 
-                <div className="text-center">{isError ? <span className="text-danger">{errorMessage}</span>: null}</div>
+                      <div className="text-center">{isError ? <span className="text-danger">{errorMessage}</span>: null}</div>
 
-                <Field name="email" type="email" component={this.renderField.bind(this)} label="Email"/>
-                <Field name="password" type="password" component={this.renderField} label="Password"/>
-                {/*<div className="form-group">*/}
-                  {/*<label*/}
-                    {/*htmlFor="inputEmail"*/}
-                    {/*className="col-lg-2 control-label">*/}
-                    {/*Email*/}
-                  {/*</label>*/}
-                  {/*<div className="col-lg-10">*/}
-                    {/*<input*/}
+                      <Field name="email" type="email" component={this.renderField.bind(this)} label="Email"/>
+                      <Field name="password" type="password" component={this.renderField} label="Password"/>
+                      {/*<div className="form-group">*/}
+                      {/*<label*/}
+                      {/*htmlFor="inputEmail"*/}
+                      {/*className="col-lg-2 control-label">*/}
+                      {/*Email*/}
+                      {/*</label>*/}
+                      {/*<div className="col-lg-10">*/}
+                      {/*<input*/}
                       {/*type="text"*/}
                       {/*className="form-control"*/}
                       {/*id="inputEmail"*/}
                       {/*placeholder="Email"*/}
                       {/*value={email}*/}
                       {/*onChange={this.handlesOnEmailChange}*/}
-                    {/*/>*/}
-                  {/*</div>*/}
-                {/*</div>*/}
+                      {/*/>*/}
+                      {/*</div>*/}
+                      {/*</div>*/}
 
-                {/*<div className="form-group">*/}
-                  {/*<label*/}
-                    {/*htmlFor="inputPassword"*/}
-                    {/*className="col-lg-2 control-label">*/}
-                    {/*Password*/}
-                  {/*</label>*/}
-                  {/*<div className="col-lg-10">*/}
-                    {/*<input*/}
+                      {/*<div className="form-group">*/}
+                      {/*<label*/}
+                      {/*htmlFor="inputPassword"*/}
+                      {/*className="col-lg-2 control-label">*/}
+                      {/*Password*/}
+                      {/*</label>*/}
+                      {/*<div className="col-lg-10">*/}
+                      {/*<input*/}
                       {/*type="password"*/}
                       {/*className="form-control"*/}
                       {/*id="inputPassword"*/}
                       {/*placeholder="Password"*/}
                       {/*value={password}*/}
                       {/*onChange={this.handlesOnPasswordChange}*/}
-                    {/*/>*/}
-                  {/*</div>*/}
-                {/*</div>*/}
-                <div className="form-group">
-                  <Col
-                    lg={10}
-                    lgOffset={2}
-                  >
-                    <Button
-                      className="login-button btn-block"
-                      bsStyle="primary"
-                      disabled={isLogging}
-                      onClick={this.handlesOnLogin}>
-                      {
-                        isLogging
-                          ?
-                          <span>
+                      {/*/>*/}
+                      {/*</div>*/}
+                      {/*</div>*/}
+                      <div className="form-group">
+                        <Col
+                          lg={10}
+                          lgOffset={2}
+                        >
+                          <Button
+                            className="login-button btn-block"
+                            bsStyle="primary"
+                            disabled={isLogging}
+                            onClick={this.handlesOnLogin}>
+                            {
+                              isLogging
+                                ?
+                                <span>
                               login in...
-                            &nbsp;
-                            <i
-                              className="fa fa-spinner fa-pulse fa-fw"
-                            />
+                                  &nbsp;
+                                  <i
+                                    className="fa fa-spinner fa-pulse fa-fw"
+                                  />
                           </span>
-                          :
-                          <span>
+                                :
+                                <span>
                               Login
                           </span>
-                      }
+                            }
+                          </Button>
+                        </Col>
+                      </div>
+                    </fieldset>
+                  </form>
+                </Col>
+              </Row>
+              <Row>
+                <Col
+                  md={4}
+                  mdOffset={4}
+                  xs={10}
+                  xsOffset={1}
+                >
+                  <div
+                    className="pull-right"
+                  >
+                    <Button
+                      bsStyle="default"
+                      onClick={this.goHome}
+                    >
+                      back to home
                     </Button>
-                  </Col>
-                </div>
-              </fieldset>
-            </form>
-          </Col>
-        </Row>
-        <Row>
-          <Col
-            md={4}
-            mdOffset={4}
-            xs={10}
-            xsOffset={1}
-          >
-            <div
-              className="pull-right"
-            >
-              <Button
-                bsStyle="default"
-                onClick={this.goHome}
-              >
-                back to home
-              </Button>
+                  </div>
+                </Col>
+              </Row>
             </div>
-          </Col>
-        </Row>
-      </div>
+          )}
+      </I18n>
+
     );
   }
   // #endregion
