@@ -1,4 +1,4 @@
-// @flow weak
+// @flow strong
 
 // #region imports
 import React, {
@@ -11,7 +11,7 @@ import {
   Button
 }                     from 'react-bootstrap';
 import { Field, reduxForm } from 'redux-form';
-import {I18n} from 'react-i18next';
+import { I18n } from 'react-i18next';
 // import auth           from '../../services/auth';
 // #endregion
 
@@ -46,7 +46,6 @@ type
 // #endregion
 
 const validate = values => {
-  console.log(values);
   const errors = {}
   if (!values.email) {
     errors.email = 'Email is required'
@@ -191,8 +190,8 @@ class Login extends PureComponent<Props, State> {
 
                       <div className="text-center">{isError ? <span className="text-danger">{errorMessage}</span>: null}</div>
 
-                      <Field name="email" type="email" component={this.renderField.bind(this)} label={t("Email")} fieldValue={email}/>
-                      <Field name="password" type="password" component={this.renderField} label={t("Password")} fieldValue={password}/>
+                      <Field name="email" type="email" component={this.renderField} label="Email" fieldValue={email}/>
+                      <Field name="password" type="password" component={this.renderField} label="Password" fieldValue={password}/>
                       {/*<div className="form-group">*/}
                       {/*<label*/}
                       {/*htmlFor="inputEmail"*/}
