@@ -190,43 +190,8 @@ class Login extends PureComponent<Props, State> {
 
                       <div className="text-center">{isError ? <span className="text-danger">{errorMessage}</span>: null}</div>
 
-                      <Field name="email" type="email" component={this.renderField} label="Email" fieldValue={email}/>
-                      <Field name="password" type="password" component={this.renderField} label="Password" fieldValue={password}/>
-                      {/*<div className="form-group">*/}
-                      {/*<label*/}
-                      {/*htmlFor="inputEmail"*/}
-                      {/*className="col-lg-2 control-label">*/}
-                      {/*Email*/}
-                      {/*</label>*/}
-                      {/*<div className="col-lg-10">*/}
-                      {/*<input*/}
-                      {/*type="text"*/}
-                      {/*className="form-control"*/}
-                      {/*id="inputEmail"*/}
-                      {/*placeholder="Email"*/}
-                      {/*value={email}*/}
-                      {/*onChange={this.handlesOnEmailChange}*/}
-                      {/*/>*/}
-                      {/*</div>*/}
-                      {/*</div>*/}
-
-                      {/*<div className="form-group">*/}
-                      {/*<label*/}
-                      {/*htmlFor="inputPassword"*/}
-                      {/*className="col-lg-2 control-label">*/}
-                      {/*Password*/}
-                      {/*</label>*/}
-                      {/*<div className="col-lg-10">*/}
-                      {/*<input*/}
-                      {/*type="password"*/}
-                      {/*className="form-control"*/}
-                      {/*id="inputPassword"*/}
-                      {/*placeholder="Password"*/}
-                      {/*value={password}*/}
-                      {/*onChange={this.handlesOnPasswordChange}*/}
-                      {/*/>*/}
-                      {/*</div>*/}
-                      {/*</div>*/}
+                      <Field name="email" type="email" component={this.renderField} label={t('Email')} fieldValue={email}/>
+                      <Field name="password" type="password" component={this.renderField} label={t('Password')} fieldValue={password}/>
                       <div className="form-group">
                         <Col
                           lg={10}
@@ -247,9 +212,9 @@ class Login extends PureComponent<Props, State> {
                                     className="fa fa-spinner fa-pulse fa-fw"
                                   />
                           </span>
-                                :
-                                <span>
-                              Login
+                          :
+                          <span>
+                            Login
                           </span>
                             }
                           </Button>
@@ -273,7 +238,7 @@ class Login extends PureComponent<Props, State> {
                       bsStyle="default"
                       onClick={this.goHome}
                     >
-                      back to home
+                      Back to home
                     </Button>
                   </div>
                 </Col>
@@ -356,6 +321,6 @@ class Login extends PureComponent<Props, State> {
 }
 
 export default reduxForm({
-  form: 'syncValidation',  // a unique identifier for this form
-  validate,                // <--- validation function given to redux-form
+  form: 'syncValidation',
+  validate,
 })(Login)
