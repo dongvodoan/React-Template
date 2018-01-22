@@ -123,7 +123,7 @@ class Login extends PureComponent<Props, State> {
       history.push('/');
   }
 
-  renderField = ({ input, label, type, fieldValue, test, meta: { touched, error, warning } }) => {
+  renderField = ({ input, label, type, fieldValue, meta: { touched, error, warning } }) => {
     return (
       <div className="form-group">
         <label
@@ -141,7 +141,7 @@ class Login extends PureComponent<Props, State> {
             value={fieldValue}
             onChange={e => this.setState({ [type]: e.target.value.trim() })}
           />
-          {touched && ((error && <span>{test(error)}</span>) || (warning && <span>{warning}</span>))}
+          {touched && ((error && <span>{error}</span>) || (warning && <span>{warning}</span>))}
         </div>
       </div>
     )
