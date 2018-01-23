@@ -228,7 +228,7 @@ class Register extends PureComponent<Props, State> {
                         </h2>
                       </legend>
 
-                      <div className="text-center">{isError ? <span className="text-danger">{errorMessage}</span>: null}</div>
+                      <div className="text-center">{isError ? <span className="text-danger">{t(errorMessage)}</span>: null}</div>
 
                       <Field
                         name="username"
