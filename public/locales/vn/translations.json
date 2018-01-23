@@ -1,6 +1,20 @@
 {
-  "login": "Đăng nhập",
-  "email": "Email",
-  "password": "Mật Khẩu",
-  "back_home": "Về trang chủ"
+  "Login": "Đăng nhập",
+  "Email": "Email",
+  "Password": "Mật khẩu",
+  "back_home": "Về trang chủ",
+  "User name": "User name",
+  "Confirm password": "Xác nhận mật khẩu",
+  "Register": "Đăng ký",
+  "Registering": "Đang đăng ký",
+  "Logging in": "Đang đăng nhập",
+  "Back to home": "Quay về trang chủ",
+  "Email is required": "Email không được trống",
+  "Password is required": "Mật khẩu không được trống",
+  "Password is at least 6 characters": "Mật khẩu phải chứa ít nhất 6 ký tự",
+  "Username is required": "Username không được trống",
+  "Username is at least 6 character": "Username phải chứa ít nhất 6 ký tự",
+  "Invalid email address": "Email không hợp lệ",
+  "Confirm password is required": "Xác nhận mật khẩu là bắt buộc",
+  "Password and confirm password does not match": "Xác nhận mật khẩu không khớp"
 }

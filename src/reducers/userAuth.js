@@ -10,7 +10,10 @@ import {
     REQUEST_LOG_USER,
     ERROR_USER_INFOS_DATA,
     RECEIVED_USER_INFOS_DATA,
-    REQUEST_USER_INFOS_DATA
+    REQUEST_USER_INFOS_DATA,
+    RECEIVED_REG_USER,
+    REQUEST_REG_USER,
+    ERROR_REG_USER,
 } from '../constants/userAuthType'
 
 // --------------------------------
@@ -20,6 +23,7 @@ const initialState = {
     // actions details
     isFetching:      false,
     isLogging:       false,
+    isRegistering:      false,
     time:            '',
 
     // userInfos
@@ -30,6 +34,7 @@ const initialState = {
 
     token:           null,
     isAuthenticated: auth.isAuthenticated(),   // authentication status (token based auth)
+    isAccountCreated: false,
     isError: false,
     errorMessage: ''
 };
@@ -114,6 +119,50 @@ export default function (
                 ...state,
                 actionTime:       currentTime,
                 isAuthenticated:  false,
+                isLogging:        false
+            };
+
+        case REQUEST_REG_USER:
+            return {
+                ...state,
+                actionTime: currentTime,
+                isRegistering:  true
+            };
+
+        case RECEIVED_REG_USER:
+            const userRegistered = action.data;
+            if (userRegistered.status === 200) {
+                return {
+                    ...state,
+                    actionTime:       currentTime,
+                    isAccountCreated: true,
+                    isError:          false,
+                    errorMessage:     '',
+                    isRegistering:    false
+                };
+            }
+
+            if (userRegistered.status === 422 || userRegistered.status === 400) {
+                return {
+                    ...state,
+                    actionTime:       currentTime,
+                    isAccountCreated: false,
+                    isError:          true,
+                    errorMessage:     userRegistered.message,
+                    isRegistering:    false
+                };
+            }
+
+            // temp
+            return {
+                ...state
+            };
+
+        case ERROR_REG_USER:
+            return {
+                ...state,
+                actionTime:       currentTime,
+                isAccountCreated: false,
                 isLogging:        false
             };
 

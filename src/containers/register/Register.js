@@ -12,6 +12,7 @@ import {
 }                     from 'react-bootstrap';
 import { Field, reduxForm } from 'redux-form';
 import { I18n } from 'react-i18next';
+import ReactModal from 'react-modal';
 // import auth           from '../../services/auth';
 // #endregion
 
@@ -26,27 +27,38 @@ type
   // containers props:
   currentView: string,
   errorMessage: string,
-  enterLogin: () => void,
-  leaveLogin: () => void,
+  enterRegister: () => void,
+  leaveRegister: () => void,
 
   // userAuth:
   isAuthenticated: boolean,
   isError: boolean,
   isFetching: boolean,
-  isLogging: boolean,
-  disconnectUser: () => any,
-  logUserIfNeeded: (email: string, password: string) => any
+  isRegistering: boolean,
+  registerUser: (
+    username: string,
+    email: string,
+    password: string,
+    confirm_password: string,
+  ) => any,
 };
 
 type
   State = {
+  username: string,
   email: string,
-  password: string
+  password: string,
+  confirmPassword: string,
 };
 // #endregion
 
 const validate = values => {
   const errors = {}
+  if (!values.username) {
+    errors.username = 'Username is required'
+  } else if (values.username.length < 6) {
+    errors.username = 'Username is at least 6 character'
+  }
   if (!values.email) {
     errors.email = 'Email is required'
   } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)) {
@@ -57,10 +69,26 @@ const validate = values => {
   } else if (values.password.length < 6) {
     errors.password = 'Password is at least 6 characters'
   }
+  if (!values.confirmPassword) {
+    errors.confirmPassword = 'Confirm password is required'
+  } else if (values.password !== values.confirmPassword) {
+    errors.confirmPassword = 'Password and confirm password does not match'
+  }
   return errors
 }
 
-class Login extends PureComponent<Props, State> {
+const modalStyles = {
+  content : {
+    top                   : '30%',
+    left                  : '50%',
+    right                 : 'auto',
+    bottom                : 'auto',
+    marginRight           : '-50%',
+    transform             : 'translate(-50%, -50%)'
+  }
+};
+
+class Register extends PureComponent<Props, State> {
   constructor(props) {
     super(props);
     this.renderField = this.renderField.bind(this);
@@ -69,58 +97,56 @@ class Login extends PureComponent<Props, State> {
   // #region propTypes
   static propTypes = {
     // react-router 4:
-    match:    PropTypes.object.isRequired,
-    location: PropTypes.object.isRequired,
-    history:  PropTypes.object.isRequired,
+    match:            PropTypes.object.isRequired,
+    location:         PropTypes.object.isRequired,
+    history:          PropTypes.object.isRequired,
 
     // containers props:
-    currentView: PropTypes.string.isRequired,
-    enterLogin:  PropTypes.func.isRequired,
-    leaveLogin:  PropTypes.func.isRequired,
+    currentView:      PropTypes.string.isRequired,
+    enterRegister:    PropTypes.func.isRequired,
+    leaveRegister:    PropTypes.func.isRequired,
 
     // userAuth:
-    isAuthenticated: PropTypes.bool,
-    isError: PropTypes.bool,
-    errorMessage: PropTypes.string,
-    isFetching:      PropTypes.bool,
-    isLogging:       PropTypes.bool,
-    disconnectUser:  PropTypes.func.isRequired,
-    logUserIfNeeded: PropTypes.func.isRequired,
+    isAuthenticated:  PropTypes.bool,
+    isError:          PropTypes.bool,
+    errorMessage:     PropTypes.string,
+    isFetching:       PropTypes.bool,
+    isRegistering:    PropTypes.bool,
+    registerUser:     PropTypes.func.isRequired,
 
   };
   // #endregion
 
   static defaultProps = {
     isFetching:      false,
-    isLogging:       true
+    isRegistering:   true
   };
 
   state = {
-    email:          '',
-    password:       ''
+    username:         '',
+    email:            '',
+    password:         '',
+    confirmPassword:  '',
   };
 
 
   // #region lifecycle methods
   componentDidMount() {
     const {
-      enterLogin,
-      // disconnectUser
+      enterRegister,
     } = this.props;
 
-    // disconnectUser(); // diconnect user: remove token and user info
-    enterLogin();
+    enterRegister();
   }
 
   componentWillUnmount() {
-    const { leaveLogin } = this.props;
-    leaveLogin();
+    const { leaveRegister } = this.props;
+    leaveRegister();
   }
 
   componentWillReceiveProps(nextProps) {
-    const { history } = this.props;
-    if (nextProps.isAuthenticated)
-      history.push('/');
+    if (nextProps.isAccountCreated)
+      this.setState({ showModal: true })
   }
 
   renderField = ({ input, label, type, fieldValue, trans, meta: { touched, error, warning } }) => {
@@ -147,14 +173,20 @@ class Login extends PureComponent<Props, State> {
     )
   }
 
+  handleOpenModal () {
+    this.setState({ showModal: true });
+  }
+
   render() {
     const {
+      username,
       email,
-      password
+      password,
+      confirmPassword,
     } = this.state;
 
     const {
-      isLogging,
+      isRegistering,
       isError,
       errorMessage
     } = this.props;
@@ -165,6 +197,26 @@ class Login extends PureComponent<Props, State> {
           (t, { i18n }) => (
 
             <div className="content">
+              <button onClick={this.handleOpenModal.bind(this)}>open</button>
+              <ReactModal
+                isOpen={this.state.showModal}
+                contentLabel="Minimal Modal Example"
+                style={modalStyles}
+              >
+                <div className="text-center">
+                  <div className="align-middle">
+                    <h2 style={{ color: 'green' }}>Register successfully!</h2>
+                    <Row>
+                      <Col md={5} mdOffset={1}>
+                        <Button bsStyle="default" onClick={this.goHome}>Back to home</Button>
+                      </Col>
+                      <Col md={5} mdOffset={1}>
+                        <Button bsStyle="info" onClick={this.goToLogin}>Go to login</Button>
+                      </Col>
+                    </Row>
+                  </div>
+                </div>
+              </ReactModal>
               <Row>
                 <Col
                   md={4}
@@ -186,52 +238,68 @@ class Login extends PureComponent<Props, State> {
                           <i className="fa fa-3x fa-user-circle" aria-hidden="true" />
                         </h1>
                         <h2>
-                          {t("Login")}
+                          {t("Register")}
                         </h2>
                       </legend>
 
                       <div className="text-center">{isError ? <span className="text-danger">{errorMessage}</span>: null}</div>
 
                       <Field
+                        name="username"
+                        type="text"
+                        component={this.renderField}
+                        label={t('User name')}
+                        fieldValue={username}
+                        trans={t}
+                      />
+                      <Field
                         name="email"
                         type="email"
                         component={this.renderField}
-                        label="Email"
+                        label={t('Email')}
                         fieldValue={email}
                         trans={t}
                       />
-
                       <Field
                         name="password"
                         type="password"
                         component={this.renderField}
-                        label="Password"
+                        label={t('Password')}
                         fieldValue={password}
                         trans={t}
                       />
+                      <Field
+                        name="confirmPassword"
+                        type="password"
+                        component={this.renderField}
+                        label={t('Confirm password')}
+                        fieldValue={confirmPassword}
+                        trans={t}
+                      />
+
                       <div className="form-group">
                         <Col
                           lg={10}
                           lgOffset={2}
                         >
                           <Button
-                            className="login-button btn-block"
-                            bsStyle="primary"
-                            disabled={isLogging}
-                            onClick={this.handlesOnLogin}>
+                            className="register-button btn-block"
+                            bsStyle="success"
+                            disabled={isRegistering}
+                            onClick={this.handlesOnRegister}>
                             {
-                              isLogging
+                              isRegistering
                                 ?
                                 <span>
-                                  {`${t('Logging in')}...`}
+                                  {`${t('Registering')}...`}
                                   &nbsp;
                                   <i
                                     className="fa fa-spinner fa-pulse fa-fw"
                                   />
                           </span>
-                          :
-                          <span>
-                            {t('Login')}
+                                :
+                                <span>
+                            {t('Register')}
                           </span>
                             }
                           </Button>
@@ -268,33 +336,8 @@ class Login extends PureComponent<Props, State> {
   }
   // #endregion
 
-  // #region form inputs change callbacks
-  handlesOnEmailChange = (
-    event: SyntheticEvent<>
-  ) => {
-    if (event) {
-      event.preventDefault();
-      let target: Object = event.target;
-      // should add some validator before setState in real use cases
-      this.setState({ email: target.value.trim() });
-    }
-  }
-
-  handlesOnPasswordChange = (
-    event: SyntheticEvent<>
-  ) => {
-    if (event) {
-      event.preventDefault();
-      let target: Object = event.target;
-      // should add some validator before setState in real use cases
-      this.setState({ password: target.value.trim() });
-    }
-  }
-  // #endregion
-
-
   // #region on login button click callback
-  handlesOnLogin = async (
+  handlesOnRegister = async (
     event: SyntheticEvent<>
   ) => {
     if (event) {
@@ -302,19 +345,21 @@ class Login extends PureComponent<Props, State> {
     }
 
     const {
-      logUserIfNeeded,
+      registerUser,
     } = this.props;
 
     const {
+      username,
       email,
-      password
+      password,
+      confirmPassword,
     } = this.state;
 
     try {
-      logUserIfNeeded(email, password);
+      registerUser(username, email, password, confirmPassword);
     } catch (error) {
       /* eslint-disable no-console */
-      console.log('login went wrong..., error: ', error);
+      console.log('register went wrong..., error: ', error);
       /* eslint-enable no-console */
     }
   };
@@ -335,9 +380,23 @@ class Login extends PureComponent<Props, State> {
     history.push({ pathname: '/' });
   }
   // #endregion
+
+  goToLogin = (
+    event: SyntheticEvent<>
+  ) => {
+    if (event) {
+      event.preventDefault();
+    }
+
+    const {
+      history
+    } = this.props;
+
+    history.push({ pathname: '/login' });
+  }
 }
 
 export default reduxForm({
   form: 'syncValidation',
   validate,
-})(Login)
+})(Register)
