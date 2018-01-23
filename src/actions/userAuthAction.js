@@ -83,10 +83,10 @@ function errorLoginUser(time = moment().format()) {
  * @param {string} password usepasswordr
  * @returns {Promise<any>} promised action
  */
-function logUser(email, password) {
+function logUser(username, password) {
     return dispatch => {
         dispatch(requestLoginUser());
-        postLogin(email, password)
+        postLogin(username, password)
                 .then(
                     data => dispatch(receivedLoginUser(data)))
                 .catch(
@@ -96,7 +96,7 @@ function logUser(email, password) {
 };
 
 export function logUserIfNeeded(
-    email: string,
+    username: string,
     password: string
 ): (...any) => Promise<any> {
     return (
@@ -104,9 +104,9 @@ export function logUserIfNeeded(
         getState: () => boolean
     ): any => {
         if (shouldLogUser(getState())) {
-            return dispatch(logUser(email, password));
+            return dispatch(logUser(username, password));
         }
-        return Promise.resolve('already loggin in...');
+        return Promise.resolve('already logged in...');
     };
 }
 

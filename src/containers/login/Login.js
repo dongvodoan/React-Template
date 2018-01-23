@@ -35,28 +35,26 @@ type
   isFetching: boolean,
   isLogging: boolean,
   disconnectUser: () => any,
-  logUserIfNeeded: (email: string, password: string) => any
+  logUserIfNeeded: (username: string, password: string) => any
 };
 
 type
   State = {
-  email: string,
+  username: string,
   password: string
 };
 // #endregion
 
 const validate = values => {
   const errors = {}
-  if (!values.email) {
-    errors.email = 'Email is required'
-  } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)) {
-    errors.email = 'Invalid email address'
+
+  if (!values.username) {
+    errors.username = 'Username is required'
   }
   if (!values.password) {
     errors.password = 'Password is required'
-  } else if (values.password.length < 6) {
-    errors.password = 'Password is at least 6 characters'
   }
+
   return errors
 }
 
@@ -96,7 +94,7 @@ class Login extends PureComponent<Props, State> {
   };
 
   state = {
-    email:          '',
+    username:          '',
     password:       ''
   };
 
@@ -149,7 +147,7 @@ class Login extends PureComponent<Props, State> {
 
   render() {
     const {
-      email,
+      username,
       password
     } = this.state;
 
@@ -173,7 +171,7 @@ class Login extends PureComponent<Props, State> {
                   xsOffset={1}
                 >
                   <button onClick={() => i18n.changeLanguage('en')}>en</button>
-                  <button onClick={() => i18n.changeLanguage('vn')}>vn</button>
+                  <button onClick={() => i18n.changeLanguage('vi')}>vn</button>
                   <button onClick={() => i18n.changeLanguage('ja')}>ja</button>
                   <form
                     className="form-horizontal"
@@ -190,14 +188,14 @@ class Login extends PureComponent<Props, State> {
                         </h2>
                       </legend>
 
-                      <div className="text-center">{isError ? <span className="text-danger">{errorMessage}</span>: null}</div>
+                      <div className="text-center">{isError ? <span className="text-danger">{t(errorMessage)}</span>: null}</div>
 
                       <Field
-                        name="email"
-                        type="email"
+                        name="username"
+                        type="text"
                         component={this.renderField}
-                        label="Email"
-                        fieldValue={email}
+                        label="Username"
+                        fieldValue={username}
                         trans={t}
                       />
 
@@ -248,12 +246,14 @@ class Login extends PureComponent<Props, State> {
                   xs={10}
                   xsOffset={1}
                 >
-                  <Button
-                    bsStyle="default"
-                    onClick={this.goHome}
-                  >
+                  <div className="pull-right">
+                    <Button
+                      bsStyle="default"
+                      onClick={this.goHome}
+                    >
                       {t('Back to home')}
                     </Button>
+                  </div>
                 </Col>
               </Row>
             </div>
@@ -262,31 +262,6 @@ class Login extends PureComponent<Props, State> {
     );
   }
   // #endregion
-
-  // #region form inputs change callbacks
-  handlesOnEmailChange = (
-    event: SyntheticEvent<>
-  ) => {
-    if (event) {
-      event.preventDefault();
-      let target: Object = event.target;
-      // should add some validator before setState in real use cases
-      this.setState({ email: target.value.trim() });
-    }
-  }
-
-  handlesOnPasswordChange = (
-    event: SyntheticEvent<>
-  ) => {
-    if (event) {
-      event.preventDefault();
-      let target: Object = event.target;
-      // should add some validator before setState in real use cases
-      this.setState({ password: target.value.trim() });
-    }
-  }
-  // #endregion
-
 
   // #region on login button click callback
   handlesOnLogin = async (
@@ -301,12 +276,12 @@ class Login extends PureComponent<Props, State> {
     } = this.props;
 
     const {
-      email,
+      username,
       password
     } = this.state;
 
     try {
-      logUserIfNeeded(email, password);
+      logUserIfNeeded(username, password);
     } catch (error) {
       /* eslint-disable no-console */
       console.log('login went wrong..., error: ', error);

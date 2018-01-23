@@ -211,7 +211,7 @@ class Register extends PureComponent<Props, State> {
                   xsOffset={1}
                 >
                   <button onClick={() => i18n.changeLanguage('en')}>en</button>
-                  <button onClick={() => i18n.changeLanguage('vn')}>vn</button>
+                  <button onClick={() => i18n.changeLanguage('vi')}>vn</button>
                   <button onClick={() => i18n.changeLanguage('ja')}>ja</button>
                   <form
                     className="form-horizontal"

@@ -5,7 +5,6 @@ import { connect }            from 'react-redux';
 import * as viewsActions      from '../../actions/viewAction';
 import * as userAuthActions   from '../../actions/userAuthAction';
 import Register               from './Register';
-import { translate } from 'react-i18next'
 
 const mapStateToProps = (state) => {
   return {
