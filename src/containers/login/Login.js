@@ -248,13 +248,10 @@ class Login extends PureComponent<Props, State> {
                   xs={10}
                   xsOffset={1}
                 >
-                  <div
-                    className="pull-right"
+                  <Button
+                    bsStyle="default"
+                    onClick={this.goHome}
                   >
-                    <Button
-                      bsStyle="default"
-                      onClick={this.goHome}
-                    >
                       {t('Back to home')}
                     </Button>
                   </div>
@@ -263,7 +260,6 @@ class Login extends PureComponent<Props, State> {
             </div>
           )}
       </I18n>
-
     );
   }
   // #endregion
