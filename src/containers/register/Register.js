@@ -13,6 +13,7 @@ import {
 import { Field, reduxForm } from 'redux-form';
 import { I18n } from 'react-i18next';
 import ReactModal from 'react-modal';
+import { modalStyles } from "../../styles";
 // import auth           from '../../services/auth';
 // #endregion
 
@@ -77,17 +78,6 @@ const validate = values => {
   return errors
 }
 
-const modalStyles = {
-  content : {
-    top                   : '30%',
-    left                  : '50%',
-    right                 : 'auto',
-    bottom                : 'auto',
-    marginRight           : '-50%',
-    transform             : 'translate(-50%, -50%)'
-  }
-};
-
 class Register extends PureComponent<Props, State> {
   constructor(props) {
     super(props);
@@ -127,6 +117,7 @@ class Register extends PureComponent<Props, State> {
     email:            '',
     password:         '',
     confirmPassword:  '',
+    showModal:        false,
   };
 
 
