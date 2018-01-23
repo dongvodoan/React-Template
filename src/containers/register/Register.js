@@ -173,10 +173,6 @@ class Register extends PureComponent<Props, State> {
     )
   }
 
-  handleOpenModal () {
-    this.setState({ showModal: true });
-  }
-
   render() {
     const {
       username,
@@ -197,7 +193,6 @@ class Register extends PureComponent<Props, State> {
           (t, { i18n }) => (
 
             <div className="content">
-              <button onClick={this.handleOpenModal.bind(this)}>open</button>
               <ReactModal
                 isOpen={this.state.showModal}
                 contentLabel="Minimal Modal Example"
