@@ -19,7 +19,7 @@ import {
 }                               from './components';
 import Login                    from './containers/login/index';
 import Home                     from './containers/home';
-
+import Register                 from './containers/register';
 
 const store = configureStore();
 
@@ -31,24 +31,25 @@ State = any;
 // #endregion
 
 class App extends Component<Props, State> {
-  render() {
-    return (
-      <Provider store={store}>
-          <div>
-              <ConnectedRouter history={history}>
-                  <ScrollTop>
-                      <Switch>
-                          <Route exact path="/" component={Home}/>
-                          <Route path="/login" component={Login} />
-                          <PrivateRoute path="/protected" component={PageProtected} />
-                          <Route component={PageNotFound} />
-                      </Switch>
-                  </ScrollTop>
-              </ConnectedRouter>
-          </div>
-      </Provider>
-    );
-  }
+    render() {
+        return (
+            <Provider store={store}>
+                <div>
+                    <ConnectedRouter history={history}>
+                        <ScrollTop>
+                            <Switch>
+                                <Route exact path="/" component={Home}/>
+                                <Route path="/login" component={Login} />
+                                <Route path="/register" component={Register} />
+                                <PrivateRoute path="/protected" component={PageProtected} />
+                                <Route component={PageNotFound} />
+                            </Switch>
+                        </ScrollTop>
+                    </ConnectedRouter>
+                </div>
+            </Provider>
+        );
+    }
 }
 
 export default App;
