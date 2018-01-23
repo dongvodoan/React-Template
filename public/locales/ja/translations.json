@@ -16,5 +16,14 @@
   "Username is at least 6 character": "Username is at least 6 character",
   "Invalid email address": "Invalid email address",
   "Confirm password is required": "Confirm password is required",
-  "Password and confirm password does not match": "Password and confirm password does not match"
+  "Password and confirm password does not match": "Password and confirm password does not match",
+  "username_is_required": "Username is required",
+  "email_is_required": "Email is required",
+  "password_is_required": "Password is required",
+  "password_min_length_is_6_character": "Password is at least 6 characters",
+  "password_confirm_is_required": "Password confirm is required",
+  "password_confirm_not_match": "Password confirm does not match",
+  "username_is_exist": "Username is already exist",
+  "email_is_exist": "Email is already exist"
+}
 }

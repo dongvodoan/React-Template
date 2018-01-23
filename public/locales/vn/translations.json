@@ -16,5 +16,13 @@
   "Username is at least 6 character": "Username phải chứa ít nhất 6 ký tự",
   "Invalid email address": "Email không hợp lệ",
   "Confirm password is required": "Xác nhận mật khẩu là bắt buộc",
-  "Password and confirm password does not match": "Xác nhận mật khẩu không khớp"
+  "Password and confirm password does not match": "Xác nhận mật khẩu không khớp",
+  "username_is_required": "Username không được trống",
+  "email_is_required": "Email không được trống",
+  "password_is_required": "Mật khẩu không được trống",
+  "password_min_length_is_6_character": "Mật khẩu phải chứa ít nhất 6 ký tự",
+  "password_confirm_is_required": "Xác nhận mật khẩu không được trống",
+  "password_confirm_not_match": "Xác nhận mật khẩu không khớp",
+  "username_is_exist": "Username đã tồn tại",
+  "email_is_exist": "Email đã tồn tại"
 }
