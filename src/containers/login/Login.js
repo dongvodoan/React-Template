@@ -254,7 +254,6 @@ class Login extends PureComponent<Props, State> {
                   >
                       {t('Back to home')}
                     </Button>
-                  </div>
                 </Col>
               </Row>
             </div>
