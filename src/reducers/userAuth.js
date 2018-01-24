@@ -13,7 +13,6 @@ import {
     REQUEST_USER_INFOS_DATA,
     RECEIVED_REG_USER,
     REQUEST_REG_USER,
-    ERROR_REG_USER,
     ERROR_LOG_PLATFORM,
 } from '../constants/userAuthType'
 
@@ -131,7 +130,7 @@ export default function (
                 isLogging:            false,
                 isError:              true,
                 errorMessage:         action.msg,
-            }
+            };
 
         case REQUEST_REG_USER:
             return {
@@ -167,14 +166,6 @@ export default function (
             // temp
             return {
                 ...state
-            };
-
-        case ERROR_REG_USER:
-            return {
-                ...state,
-                actionTime:       currentTime,
-                isAccountCreated: false,
-                isLogging:        false
             };
 
         // not used right now:
