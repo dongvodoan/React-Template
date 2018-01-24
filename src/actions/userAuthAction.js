@@ -1,6 +1,6 @@
 // @flow
 import auth                   from '../services/auth';
-import { postLogin, postRegister } from '../services/api';
+import { postLoginPlatform, postRegister, postLoginServer } from '../services/api';
 
 import {
     DISCONNECT_USER,
@@ -83,15 +83,19 @@ function errorLoginUser(time = moment().format()) {
  * @param {string} password usepasswordr
  * @returns {Promise<any>} promised action
  */
-function logUser(username, password) {
+function logUserPlatform(username, password) {
     return dispatch => {
         dispatch(requestLoginUser());
-        postLogin(username, password)
-                .then(
-                    data => dispatch(receivedLoginUser(data)))
-                .catch(
-                    error => dispatch(errorLoginUser(error))
-                );
+        postLoginPlatform(username, password)
+            .then(
+                res => postLoginServer(res.data.access_token)
+            )
+            .then(
+                data => dispatch(receivedLoginUser(data))
+            )
+            .catch(
+                error => dispatch(errorLoginUser(error))
+            );
     };
 };
 
@@ -104,7 +108,7 @@ export function logUserIfNeeded(
         getState: () => boolean
     ): any => {
         if (shouldLogUser(getState())) {
-            return dispatch(logUser(username, password));
+            return dispatch(logUserPlatform(username, password));
         }
         return Promise.resolve('already logged in...');
     };
