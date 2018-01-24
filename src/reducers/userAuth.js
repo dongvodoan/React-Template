@@ -3,19 +3,21 @@ import moment                 from 'moment';
 import auth                   from '../services/auth';
 
 import {
-    DISCONNECT_USER,
-    CHECK_IF_USER_IS_AUTHENTICATED,
-    ERROR_LOG_USER,
-    RECEIVED_LOG_USER,
-    REQUEST_LOG_USER,
-    ERROR_USER_INFOS_DATA,
-    RECEIVED_USER_INFOS_DATA,
-    REQUEST_USER_INFOS_DATA,
-    RECEIVED_REG_USER,
-    REQUEST_REG_USER,
-    ERROR_REG_USER,
-    ERROR_LOG_PLATFORM,
+  DISCONNECT_USER,
+  CHECK_IF_USER_IS_AUTHENTICATED,
+  ERROR_LOG_USER,
+  RECEIVED_LOG_USER,
+  REQUEST_LOG_USER,
+  ERROR_USER_INFOS_DATA,
+  RECEIVED_USER_INFOS_DATA,
+  REQUEST_USER_INFOS_DATA,
+  RECEIVED_REG_USER,
+  REQUEST_REG_USER,
+  ERROR_REG_USER,
+  ERROR_LOG_PLATFORM,
+  RECEIVED_USER_INFO,
 } from '../constants/userAuthType'
+import { userDataKey } from "../constants/constParams";
 
 // --------------------------------
 // REDUCER
@@ -92,6 +94,10 @@ export default function (
                 errorMessage: '',
                 isLogging:       false
             };
+
+        case RECEIVED_USER_INFO:
+            console.log()
+            localStorage.setItem(userDataKey, action.data);
 
         case ERROR_LOG_USER:
             return {

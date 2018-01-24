@@ -1,6 +1,6 @@
 // @flow
 import auth                   from '../services/auth';
-import { postLoginPlatform, postRegister, postLoginServer } from '../services/api';
+import { postLoginPlatform, postRegister, postLoginServer, getUserInfo } from '../services/api';
 
 import {
     DISCONNECT_USER,
@@ -11,6 +11,7 @@ import {
     RECEIVED_REG_USER,
     ERROR_REG_USER,
     ERROR_LOG_PLATFORM,
+    RECEIVED_USER_INFO,
 } from '../constants/userAuthType'
 import moment from "moment";
 
@@ -77,6 +78,15 @@ function errorLoginUser(msg, time = moment().format()) {
     }
 }
 
+function receivedUserInfo(data, time = moment().format()) {
+    return {
+        type:       RECEIVED_USER_INFO,
+        isFetching: false,
+        data,
+        time
+    }
+}
+
 /**
  *
  *  user login
@@ -94,15 +104,19 @@ function logUser(username, password) {
                     if(res.status !== 200)
                         throw res;
 
-                    return postLoginServer(res.data.access_token)
+                    return postLoginServer(res.data.access_token);
                 }
             )
             .then(
                 res => {
                     if(res.status !== 200)
                         throw res;
-                    dispatch(receivedLoginUser(res.data))
+                    dispatch(receivedLoginUser(res.data));
+                    return getUserInfo(res.data);
                 }
+            )
+            .then(
+                res => dispatch(receivedUserInfo(res.data))
             )
             .catch(
                 error => dispatch(errorLoginUser(error.message))
