@@ -11,11 +11,9 @@ import {
   Button
 }                     from 'react-bootstrap';
 import { Field, reduxForm } from 'redux-form';
-<<<<<<< HEAD
-import {I18n} from 'react-i18next';
-=======
 import { I18n } from 'react-i18next';
->>>>>>> 5059a2ffe8894fb384dab8d6ad18e80f234c6772
+import ReactModal from 'react-modal';
+import { modalStyles } from "../../styles";
 // import auth           from '../../services/auth';
 // #endregion
 
@@ -30,40 +28,57 @@ type
   // containers props:
   currentView: string,
   errorMessage: string,
-  enterLogin: () => void,
-  leaveLogin: () => void,
+  enterRegister: () => void,
+  leaveRegister: () => void,
 
   // userAuth:
   isAuthenticated: boolean,
   isError: boolean,
   isFetching: boolean,
-  isLogging: boolean,
-  disconnectUser: () => any,
-  logUserIfNeeded: (username: string, password: string) => any
+  isRegistering: boolean,
+  registerUser: (
+    username: string,
+    email: string,
+    password: string,
+    confirm_password: string,
+  ) => any,
 };
 
 type
   State = {
   username: string,
-  password: string
+  email: string,
+  password: string,
+  confirmPassword: string,
 };
 // #endregion
 
 const validate = values => {
-  console.log(values);
   const errors = {}
-
   if (!values.username) {
     errors.username = 'Username is required'
+  } else if (values.username.length < 6) {
+    errors.username = 'Username is at least 6 character'
+  }
+  if (!values.email) {
+    errors.email = 'Email is required'
+  } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)) {
+    errors.email = 'Invalid email address'
   }
   if (!values.password) {
     errors.password = 'Password is required'
+  } else if (values.password.length < 6) {
+    errors.password = 'Password is at least 6 characters'
   }
-
+  if (!values.confirmPassword) {
+    errors.confirmPassword = 'Confirm password is required'
+  } else if (values.password !== values.confirmPassword) {
+    errors.confirmPassword = 'Password and confirm password does not match'
+  }
   return errors
 }
 
-class Login extends PureComponent<Props, State> {
+class Register extends PureComponent<Props, State> {
   constructor(props) {
     super(props);
     this.renderField = this.renderField.bind(this);
@@ -72,58 +87,57 @@ class Login extends PureComponent<Props, State> {
   // #region propTypes
   static propTypes = {
     // react-router 4:
-    match:    PropTypes.object.isRequired,
-    location: PropTypes.object.isRequired,
-    history:  PropTypes.object.isRequired,
+    match:            PropTypes.object.isRequired,
+    location:         PropTypes.object.isRequired,
+    history:          PropTypes.object.isRequired,
 
     // containers props:
-    currentView: PropTypes.string.isRequired,
-    enterLogin:  PropTypes.func.isRequired,
-    leaveLogin:  PropTypes.func.isRequired,
+    currentView:      PropTypes.string.isRequired,
+    enterRegister:    PropTypes.func.isRequired,
+    leaveRegister:    PropTypes.func.isRequired,
 
     // userAuth:
-    isAuthenticated: PropTypes.bool,
-    isError: PropTypes.bool,
-    errorMessage: PropTypes.string,
-    isFetching:      PropTypes.bool,
-    isLogging:       PropTypes.bool,
-    disconnectUser:  PropTypes.func.isRequired,
-    logUserIfNeeded: PropTypes.func.isRequired,
+    isAuthenticated:  PropTypes.bool,
+    isError:          PropTypes.bool,
+    errorMessage:     PropTypes.string,
+    isFetching:       PropTypes.bool,
+    isRegistering:    PropTypes.bool,
+    registerUser:     PropTypes.func.isRequired,
 
   };
   // #endregion
 
   static defaultProps = {
     isFetching:      false,
-    isLogging:       true
+    isRegistering:   true
   };
 
   state = {
-    username:          '',
-    password:       ''
+    username:         '',
+    email:            '',
+    password:         '',
+    confirmPassword:  '',
+    showModal:        false,
   };
 
 
   // #region lifecycle methods
   componentDidMount() {
     const {
-      enterLogin,
-      // disconnectUser
+      enterRegister,
     } = this.props;
 
-    // disconnectUser(); // diconnect user: remove token and user info
-    enterLogin();
+    enterRegister();
   }
 
   componentWillUnmount() {
-    const { leaveLogin } = this.props;
-    leaveLogin();
+    const { leaveRegister } = this.props;
+    leaveRegister();
   }
 
   componentWillReceiveProps(nextProps) {
-    const { history } = this.props;
-    if (nextProps.isAuthenticated)
-      history.push('/');
+    if (nextProps.isAccountCreated)
+      this.setState({ showModal: true })
   }
 
   renderField = ({ input, label, type, fieldValue, trans, meta: { touched, error, warning } }) => {
@@ -153,11 +167,13 @@ class Login extends PureComponent<Props, State> {
   render() {
     const {
       username,
-      password
+      email,
+      password,
+      confirmPassword,
     } = this.state;
 
     const {
-      isLogging,
+      isRegistering,
       isError,
       errorMessage
     } = this.props;
@@ -168,6 +184,25 @@ class Login extends PureComponent<Props, State> {
           (t, { i18n }) => (
 
             <div className="content">
+              <ReactModal
+                isOpen={this.state.showModal}
+                contentLabel="Minimal Modal Example"
+                style={modalStyles}
+              >
+                <div className="text-center">
+                  <div className="align-middle">
+                    <h2 style={{ color: 'green' }}>Register successfully!</h2>
+                    <Row>
+                      <Col md={5} mdOffset={1}>
+                        <Button bsStyle="default" onClick={this.goHome}>Back to home</Button>
+                      </Col>
+                      <Col md={5} mdOffset={1}>
+                        <Button bsStyle="info" onClick={this.goToLogin}>Go to login</Button>
+                      </Col>
+                    </Row>
+                  </div>
+                </div>
+              </ReactModal>
               <Row>
                 <Col
                   md={4}
@@ -176,11 +211,7 @@ class Login extends PureComponent<Props, State> {
                   xsOffset={1}
                 >
                   <button onClick={() => i18n.changeLanguage('en')}>en</button>
-<<<<<<< HEAD
-                  <button onClick={() => i18n.changeLanguage('vn')}>vn</button>
-=======
                   <button onClick={() => i18n.changeLanguage('vi')}>vn</button>
->>>>>>> 5059a2ffe8894fb384dab8d6ad18e80f234c6772
                   <button onClick={() => i18n.changeLanguage('ja')}>ja</button>
                   <form
                     className="form-horizontal"
@@ -193,52 +224,7 @@ class Login extends PureComponent<Props, State> {
                           <i className="fa fa-3x fa-user-circle" aria-hidden="true" />
                         </h1>
                         <h2>
-<<<<<<< HEAD
-                          {t("login")}
-                        </h2>
-                      </legend>
-
-                      <div className="text-center">{isError ? <span className="text-danger">{errorMessage}</span>: null}</div>
-
-                      <Field name="email" type="email" component={this.renderField.bind(this)} label="Email"/>
-                      <Field name="password" type="password" component={this.renderField} label="Password"/>
-                      {/*<div className="form-group">*/}
-                      {/*<label*/}
-                      {/*htmlFor="inputEmail"*/}
-                      {/*className="col-lg-2 control-label">*/}
-                      {/*Email*/}
-                      {/*</label>*/}
-                      {/*<div className="col-lg-10">*/}
-                      {/*<input*/}
-                      {/*type="text"*/}
-                      {/*className="form-control"*/}
-                      {/*id="inputEmail"*/}
-                      {/*placeholder="Email"*/}
-                      {/*value={email}*/}
-                      {/*onChange={this.handlesOnEmailChange}*/}
-                      {/*/>*/}
-                      {/*</div>*/}
-                      {/*</div>*/}
-
-                      {/*<div className="form-group">*/}
-                      {/*<label*/}
-                      {/*htmlFor="inputPassword"*/}
-                      {/*className="col-lg-2 control-label">*/}
-                      {/*Password*/}
-                      {/*</label>*/}
-                      {/*<div className="col-lg-10">*/}
-                      {/*<input*/}
-                      {/*type="password"*/}
-                      {/*className="form-control"*/}
-                      {/*id="inputPassword"*/}
-                      {/*placeholder="Password"*/}
-                      {/*value={password}*/}
-                      {/*onChange={this.handlesOnPasswordChange}*/}
-                      {/*/>*/}
-                      {/*</div>*/}
-                      {/*</div>*/}
-=======
-                          {t("Login")}
+                          {t("Register")}
                         </h2>
                       </legend>
 
@@ -248,53 +234,58 @@ class Login extends PureComponent<Props, State> {
                         name="username"
                         type="text"
                         component={this.renderField}
-                        label="Username"
+                        label={t('User name')}
                         fieldValue={username}
                         trans={t}
                       />
-
+                      <Field
+                        name="email"
+                        type="email"
+                        component={this.renderField}
+                        label={t('Email')}
+                        fieldValue={email}
+                        trans={t}
+                      />
                       <Field
                         name="password"
                         type="password"
                         component={this.renderField}
-                        label="Password"
+                        label={t('Password')}
                         fieldValue={password}
                         trans={t}
                       />
->>>>>>> 5059a2ffe8894fb384dab8d6ad18e80f234c6772
+                      <Field
+                        name="confirmPassword"
+                        type="password"
+                        component={this.renderField}
+                        label={t('Confirm password')}
+                        fieldValue={confirmPassword}
+                        trans={t}
+                      />
+
                       <div className="form-group">
                         <Col
                           lg={10}
                           lgOffset={2}
                         >
                           <Button
-                            className="login-button btn-block"
-                            bsStyle="primary"
-                            disabled={isLogging}
-                            onClick={this.handlesOnLogin}>
+                            className="register-button btn-block"
+                            bsStyle="success"
+                            disabled={isRegistering}
+                            onClick={this.handlesOnRegister}>
                             {
-                              isLogging
+                              isRegistering
                                 ?
                                 <span>
-<<<<<<< HEAD
-                              login in...
-=======
-                                  {`${t('Logging in')}...`}
->>>>>>> 5059a2ffe8894fb384dab8d6ad18e80f234c6772
+                                  {`${t('Registering')}...`}
                                   &nbsp;
                                   <i
                                     className="fa fa-spinner fa-pulse fa-fw"
                                   />
                           </span>
-<<<<<<< HEAD
                                 :
                                 <span>
-                              Login
-=======
-                          :
-                          <span>
-                            {t('Login')}
->>>>>>> 5059a2ffe8894fb384dab8d6ad18e80f234c6772
+                            {t('Register')}
                           </span>
                             }
                           </Button>
@@ -311,22 +302,14 @@ class Login extends PureComponent<Props, State> {
                   xs={10}
                   xsOffset={1}
                 >
-<<<<<<< HEAD
                   <div
                     className="pull-right"
                   >
-=======
-                  <div className="pull-right">
->>>>>>> 5059a2ffe8894fb384dab8d6ad18e80f234c6772
                     <Button
                       bsStyle="default"
                       onClick={this.goHome}
                     >
-<<<<<<< HEAD
-                      back to home
-=======
                       {t('Back to home')}
->>>>>>> 5059a2ffe8894fb384dab8d6ad18e80f234c6772
                     </Button>
                   </div>
                 </Col>
@@ -334,16 +317,13 @@ class Login extends PureComponent<Props, State> {
             </div>
           )}
       </I18n>
-<<<<<<< HEAD
 
-=======
->>>>>>> 5059a2ffe8894fb384dab8d6ad18e80f234c6772
     );
   }
   // #endregion
 
   // #region on login button click callback
-  handlesOnLogin = async (
+  handlesOnRegister = async (
     event: SyntheticEvent<>
   ) => {
     if (event) {
@@ -351,19 +331,21 @@ class Login extends PureComponent<Props, State> {
     }
 
     const {
-      logUserIfNeeded,
+      registerUser,
     } = this.props;
 
     const {
       username,
-      password
+      email,
+      password,
+      confirmPassword,
     } = this.state;
 
     try {
-      logUserIfNeeded(username, password);
+      registerUser(username, email, password, confirmPassword);
     } catch (error) {
       /* eslint-disable no-console */
-      console.log('login went wrong..., error: ', error);
+      console.log('register went wrong..., error: ', error);
       /* eslint-enable no-console */
     }
   };
@@ -384,9 +366,23 @@ class Login extends PureComponent<Props, State> {
     history.push({ pathname: '/' });
   }
   // #endregion
+
+  goToLogin = (
+    event: SyntheticEvent<>
+  ) => {
+    if (event) {
+      event.preventDefault();
+    }
+
+    const {
+      history
+    } = this.props;
+
+    history.push({ pathname: '/login' });
+  }
 }
 
 export default reduxForm({
   form: 'syncValidation',
   validate,
-})(Login)
+})(Register)

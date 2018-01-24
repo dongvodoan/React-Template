@@ -4,7 +4,7 @@ import { bindActionCreators } from 'redux';
 import { connect }            from 'react-redux';
 import * as viewsActions      from '../../actions/viewAction';
 import * as userAuthActions   from '../../actions/userAuthAction';
-import Login                  from './Login';
+import Register               from './Register';
 
 const mapStateToProps = (state) => {
   return {
@@ -12,11 +12,11 @@ const mapStateToProps = (state) => {
     currentView:  state.views.currentView,
 
     // useAuth:
-    isAuthenticated: state.userAuth.isAuthenticated,
+    isAccountCreated:state.userAuth.isAccountCreated,
     isError:         state.userAuth.isError,
     errorMessage:    state.userAuth.errorMessage,
     isFetching:      state.userAuth.isFetching,
-    isLogging:       state.userAuth.isLogging,
+    isRegistering:   state.userAuth.isRegistering,
   };
 };
 
@@ -35,4 +35,4 @@ const mapDispatchToProps = (dispatch) => {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(Login);
+)(Register);
