@@ -7,7 +7,6 @@ import {
     CHECK_IF_USER_IS_AUTHENTICATED,
     REQUEST_LOG_USER,
     RECEIVED_LOG_USER,
-    ERROR_LOG_USER,
     REQUEST_REG_USER,
     RECEIVED_REG_USER,
     ERROR_REG_USER,
@@ -99,7 +98,11 @@ function logUser(username, password) {
                 }
             )
             .then(
-                data => dispatch(receivedLoginUser(data))
+                res => {
+                    if(res.status !== 200)
+                        throw res;
+                    dispatch(receivedLoginUser(res.data))
+                }
             )
             .catch(
                 error => dispatch(errorLoginUser(error.message))
