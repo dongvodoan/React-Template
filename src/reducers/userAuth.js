@@ -14,6 +14,7 @@ import {
     RECEIVED_REG_USER,
     REQUEST_REG_USER,
     ERROR_REG_USER,
+    ERROR_LOG_PLATFORM,
 } from '../constants/userAuthType'
 
 // --------------------------------
@@ -121,6 +122,16 @@ export default function (
                 isAuthenticated:  false,
                 isLogging:        false
             };
+
+        case ERROR_LOG_PLATFORM:
+            return {
+                ...state,
+                actionTime:           currentTime,
+                isAuthenticated:      false,
+                isLogging:            false,
+                isError:              true,
+                errorMessage:         action.msg,
+            }
 
         case REQUEST_REG_USER:
             return {

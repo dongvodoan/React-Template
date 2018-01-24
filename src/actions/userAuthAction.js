@@ -10,7 +10,8 @@ import {
     ERROR_LOG_USER,
     REQUEST_REG_USER,
     RECEIVED_REG_USER,
-    ERROR_REG_USER
+    ERROR_REG_USER,
+    ERROR_LOG_PLATFORM,
 } from '../constants/userAuthType'
 import moment from "moment";
 
@@ -67,12 +68,14 @@ function receivedLoginUser(data, time = moment().format()) {
         time
     };
 }
-function errorLoginUser(time = moment().format()) {
+
+function errorLoginUser(msg, time = moment().format()) {
     return {
-        type:       ERROR_LOG_USER,
+        type:       ERROR_LOG_PLATFORM,
         isFetching: false,
+        msg,
         time
-    };
+    }
 }
 
 /**
@@ -83,18 +86,23 @@ function errorLoginUser(time = moment().format()) {
  * @param {string} password usepasswordr
  * @returns {Promise<any>} promised action
  */
-function logUserPlatform(username, password) {
+function logUser(username, password) {
     return dispatch => {
         dispatch(requestLoginUser());
         postLoginPlatform(username, password)
             .then(
-                res => postLoginServer(res.data.access_token)
+                res => {
+                    if(res.status !== 200)
+                        throw res;
+
+                    return postLoginServer(res.data.access_token)
+                }
             )
             .then(
                 data => dispatch(receivedLoginUser(data))
             )
             .catch(
-                error => dispatch(errorLoginUser(error))
+                error => dispatch(errorLoginUser(error.message))
             );
     };
 };
@@ -108,7 +116,7 @@ export function logUserIfNeeded(
         getState: () => boolean
     ): any => {
         if (shouldLogUser(getState())) {
-            return dispatch(logUserPlatform(username, password));
+            return dispatch(logUser(username, password));
         }
         return Promise.resolve('already logged in...');
     };
