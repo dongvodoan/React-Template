@@ -1,25 +1,19 @@
 // @flow strong
 
 // #region imports
-import React, {
-  PureComponent
-}                     from 'react';
-import PropTypes      from 'prop-types';
-import {
-  Row,
-  Col,
-  Button
-}                     from 'react-bootstrap';
-import { Field, reduxForm } from 'redux-form';
-import { I18n } from 'react-i18next';
-import ReactModal from 'react-modal';
-import { modalStyles } from "../../styles";
-// import auth           from '../../services/auth';
+import React, { PureComponent } from 'react';
+import PropTypes                from 'prop-types';
+import { Row, Col, Button }     from 'react-bootstrap';
+import { Field, reduxForm }     from 'redux-form';
+import { I18n }                 from 'react-i18next';
+import ReactModal               from 'react-modal';
+import { modalStyles }          from '../../styles';
+import { validate }             from './validation';
+// import auth                  from '../../services/auth';
 // #endregion
 
 // #region flow types
-type
-  Props = {
+type Props = {
   // react-router 4:
   match: any,
   location: any,
@@ -44,39 +38,14 @@ type
   ) => any,
 };
 
-type
-  State = {
+type State = {
   username: string,
   email: string,
   password: string,
   confirmPassword: string,
+  isOK: boolean
 };
 // #endregion
-
-const validate = values => {
-  const errors = {}
-  if (!values.username) {
-    errors.username = 'Username is required'
-  } else if (values.username.length < 6) {
-    errors.username = 'Username is at least 6 character'
-  }
-  if (!values.email) {
-    errors.email = 'Email is required'
-  } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)) {
-    errors.email = 'Invalid email address'
-  }
-  if (!values.password) {
-    errors.password = 'Password is required'
-  } else if (values.password.length < 6) {
-    errors.password = 'Password is at least 6 characters'
-  }
-  if (!values.confirmPassword) {
-    errors.confirmPassword = 'Confirm password is required'
-  } else if (values.password !== values.confirmPassword) {
-    errors.confirmPassword = 'Password and confirm password does not match'
-  }
-  return errors
-}
 
 class Register extends PureComponent<Props, State> {
   constructor(props) {
@@ -118,15 +87,13 @@ class Register extends PureComponent<Props, State> {
     password:         '',
     confirmPassword:  '',
     showModal:        false,
+    isOK:             true
   };
 
 
   // #region lifecycle methods
   componentDidMount() {
-    const {
-      enterRegister,
-    } = this.props;
-
+    const { enterRegister } = this.props;
     enterRegister();
   }
 
@@ -137,7 +104,12 @@ class Register extends PureComponent<Props, State> {
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.isAccountCreated)
-      this.setState({ showModal: true })
+        this.setState({ showModal: true });
+    if (nextProps.syncValidation && !nextProps.syncValidation.syncErrors) {
+        this.setState({ isOK: false });
+    } else {
+        this.setState({ isOK: true });
+    }
   }
 
   renderField = ({ input, label, type, fieldValue, trans, meta: { touched, error, warning } }) => {
@@ -153,31 +125,21 @@ class Register extends PureComponent<Props, State> {
             {...input}
             placeholder={label}
             type={type}
-            className='form-control'
+            className="form-control"
             id={label}
             value={fieldValue}
             onChange={e => this.setState({ [input.name]: e.target.value.trim() })}
           />
-          {touched && ((error && <span>{trans(error)}</span>) || (warning && <span>{trans(warning)}</span>))}
+          {touched && ((error && <span className="text-danger">{trans(error)}</span>) ||
+              (warning && <span className="text-danger">{trans(warning)}</span>))}
         </div>
       </div>
     )
-  }
+  };
 
   render() {
-    const {
-      username,
-      email,
-      password,
-      confirmPassword,
-    } = this.state;
-
-    const {
-      isRegistering,
-      isError,
-      errorMessage
-    } = this.props;
-
+    const { username, email, password, confirmPassword, isOK} = this.state;
+    const { isRegistering, isError, errorMessage} = this.props;
     return (
       <I18n ns="translations">
         {
@@ -204,14 +166,9 @@ class Register extends PureComponent<Props, State> {
                 </div>
               </ReactModal>
               <Row>
-                <Col
-                  md={4}
-                  mdOffset={4}
-                  xs={10}
-                  xsOffset={1}
-                >
+                <Col md={4} mdOffset={4} xs={10} xsOffset={1}>
                   <button onClick={() => i18n.changeLanguage('en')}>en</button>
-                  <button onClick={() => i18n.changeLanguage('vn')}>vn</button>
+                  <button onClick={() => i18n.changeLanguage('vi')}>vn</button>
                   <button onClick={() => i18n.changeLanguage('ja')}>ja</button>
                   <form
                     className="form-horizontal"
@@ -264,14 +221,11 @@ class Register extends PureComponent<Props, State> {
                       />
 
                       <div className="form-group">
-                        <Col
-                          lg={10}
-                          lgOffset={2}
-                        >
+                        <Col lg={10} lgOffset={2}>
                           <Button
                             className="register-button btn-block"
                             bsStyle="success"
-                            disabled={isRegistering}
+                            disabled={isRegistering || isOK}
                             onClick={this.handlesOnRegister}>
                             {
                               isRegistering
@@ -279,9 +233,7 @@ class Register extends PureComponent<Props, State> {
                                 <span>
                                   {`${t('Registering')}...`}
                                   &nbsp;
-                                  <i
-                                    className="fa fa-spinner fa-pulse fa-fw"
-                                  />
+                                  <i className="fa fa-spinner fa-pulse fa-fw"/>
                           </span>
                                 :
                                 <span>
@@ -296,19 +248,9 @@ class Register extends PureComponent<Props, State> {
                 </Col>
               </Row>
               <Row>
-                <Col
-                  md={4}
-                  mdOffset={4}
-                  xs={10}
-                  xsOffset={1}
-                >
-                  <div
-                    className="pull-right"
-                  >
-                    <Button
-                      bsStyle="default"
-                      onClick={this.goHome}
-                    >
+                <Col md={4} mdOffset={4} xs={10} xsOffset={1}>
+                  <div className="pull-right">
+                    <Button bsStyle="default" onClick={this.goHome}>
                       {t('Back to home')}
                     </Button>
                   </div>
@@ -329,18 +271,8 @@ class Register extends PureComponent<Props, State> {
     if (event) {
       event.preventDefault();
     }
-
-    const {
-      registerUser,
-    } = this.props;
-
-    const {
-      username,
-      email,
-      password,
-      confirmPassword,
-    } = this.state;
-
+    const { registerUser } = this.props;
+    const { username, email, password, confirmPassword } = this.state;
     try {
       registerUser(username, email, password, confirmPassword);
     } catch (error) {
@@ -358,13 +290,9 @@ class Register extends PureComponent<Props, State> {
     if (event) {
       event.preventDefault();
     }
-
-    const {
-      history
-    } = this.props;
-
+    const { history } = this.props;
     history.push({ pathname: '/' });
-  }
+  };
   // #endregion
 
   goToLogin = (
@@ -373,11 +301,7 @@ class Register extends PureComponent<Props, State> {
     if (event) {
       event.preventDefault();
     }
-
-    const {
-      history
-    } = this.props;
-
+    const { history } = this.props;
     history.push({ pathname: '/login' });
   }
 }
@@ -385,4 +309,4 @@ class Register extends PureComponent<Props, State> {
 export default reduxForm({
   form: 'syncValidation',
   validate,
-})(Register)
+})(Register);

@@ -5,7 +5,6 @@ import { connect }            from 'react-redux';
 import * as viewsActions      from '../../actions/viewAction';
 import * as userAuthActions   from '../../actions/userAuthAction';
 import Register               from './Register';
-import { translate } from 'react-i18next'
 
 const mapStateToProps = (state) => {
   return {
@@ -18,6 +17,9 @@ const mapStateToProps = (state) => {
     errorMessage:    state.userAuth.errorMessage,
     isFetching:      state.userAuth.isFetching,
     isRegistering:   state.userAuth.isRegistering,
+
+    // redux form
+    syncValidation: state.form.syncValidation
   };
 };
 

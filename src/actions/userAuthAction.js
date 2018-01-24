@@ -1,16 +1,16 @@
 // @flow
 import auth                   from '../services/auth';
-import { postLogin, postRegister } from '../services/api';
+import { postLoginPlatform, postRegister, postLoginServer } from '../services/api';
 
 import {
     DISCONNECT_USER,
     CHECK_IF_USER_IS_AUTHENTICATED,
     REQUEST_LOG_USER,
     RECEIVED_LOG_USER,
-    ERROR_LOG_USER,
     REQUEST_REG_USER,
     RECEIVED_REG_USER,
-    ERROR_REG_USER
+    ERROR_REG_USER,
+    ERROR_LOG_PLATFORM,
 } from '../constants/userAuthType'
 import moment from "moment";
 
@@ -67,12 +67,14 @@ function receivedLoginUser(data, time = moment().format()) {
         time
     };
 }
-function errorLoginUser(time = moment().format()) {
+
+function errorLoginUser(msg, time = moment().format()) {
     return {
-        type:       ERROR_LOG_USER,
+        type:       ERROR_LOG_PLATFORM,
         isFetching: false,
+        msg,
         time
-    };
+    }
 }
 
 /**
@@ -83,20 +85,29 @@ function errorLoginUser(time = moment().format()) {
  * @param {string} password usepasswordr
  * @returns {Promise<any>} promised action
  */
-function logUser(email, password) {
+function logUser(username, password) {
     return dispatch => {
         dispatch(requestLoginUser());
-        postLogin(email, password)
-                .then(
-                    data => dispatch(receivedLoginUser(data)))
-                .catch(
-                    error => dispatch(errorLoginUser(error))
-                );
+        postLoginPlatform(username, password)
+            .then(
+                res => {
+                    if(res.status !== 200)
+                        throw res;
+
+                    return postLoginServer(res.data.access_token)
+                }
+            )
+            .then(
+                data => dispatch(receivedLoginUser(data))
+            )
+            .catch(
+                error => dispatch(errorLoginUser(error.message))
+            );
     };
 };
 
 export function logUserIfNeeded(
-    email: string,
+    username: string,
     password: string
 ): (...any) => Promise<any> {
     return (
@@ -104,9 +115,9 @@ export function logUserIfNeeded(
         getState: () => boolean
     ): any => {
         if (shouldLogUser(getState())) {
-            return dispatch(logUser(email, password));
+            return dispatch(logUser(username, password));
         }
-        return Promise.resolve('already loggin in...');
+        return Promise.resolve('already logged in...');
     };
 }
 

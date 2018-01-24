@@ -1,23 +1,17 @@
 // @flow strong
 
 // #region imports
-import React, {
-  PureComponent
-}                     from 'react';
-import PropTypes      from 'prop-types';
-import {
-  Row,
-  Col,
-  Button
-}                     from 'react-bootstrap';
-import { Field, reduxForm } from 'redux-form';
-import { I18n } from 'react-i18next';
-// import auth           from '../../services/auth';
+import React, { PureComponent } from 'react';
+import PropTypes                from 'prop-types';
+import { Row, Col, Button }     from 'react-bootstrap';
+import { Field, reduxForm }     from 'redux-form';
+import { I18n }                 from 'react-i18next';
+import { validate }             from './validation';
+// import auth                  from '../../services/auth';
 // #endregion
 
 // #region flow types
-type
-  Props = {
+type Props = {
   // react-router 4:
   match: any,
   location: any,
@@ -35,30 +29,15 @@ type
   isFetching: boolean,
   isLogging: boolean,
   disconnectUser: () => any,
-  logUserIfNeeded: (email: string, password: string) => any
+  logUserIfNeeded: (username: string, password: string) => any
 };
 
-type
-  State = {
-  email: string,
-  password: string
+type State = {
+  username: string,
+  password: string,
+  isOK: boolean
 };
 // #endregion
-
-const validate = values => {
-  const errors = {}
-  if (!values.email) {
-    errors.email = 'Email is required'
-  } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)) {
-    errors.email = 'Invalid email address'
-  }
-  if (!values.password) {
-    errors.password = 'Password is required'
-  } else if (values.password.length < 6) {
-    errors.password = 'Password is at least 6 characters'
-  }
-  return errors
-}
 
 class Login extends PureComponent<Props, State> {
   constructor(props) {
@@ -69,19 +48,19 @@ class Login extends PureComponent<Props, State> {
   // #region propTypes
   static propTypes = {
     // react-router 4:
-    match:    PropTypes.object.isRequired,
-    location: PropTypes.object.isRequired,
-    history:  PropTypes.object.isRequired,
+    match:           PropTypes.object.isRequired,
+    location:        PropTypes.object.isRequired,
+    history:         PropTypes.object.isRequired,
 
     // containers props:
-    currentView: PropTypes.string.isRequired,
-    enterLogin:  PropTypes.func.isRequired,
-    leaveLogin:  PropTypes.func.isRequired,
+    currentView:     PropTypes.string.isRequired,
+    enterLogin:      PropTypes.func.isRequired,
+    leaveLogin:      PropTypes.func.isRequired,
 
     // userAuth:
     isAuthenticated: PropTypes.bool,
-    isError: PropTypes.bool,
-    errorMessage: PropTypes.string,
+    isError:         PropTypes.bool,
+    errorMessage:    PropTypes.string,
     isFetching:      PropTypes.bool,
     isLogging:       PropTypes.bool,
     disconnectUser:  PropTypes.func.isRequired,
@@ -91,24 +70,20 @@ class Login extends PureComponent<Props, State> {
   // #endregion
 
   static defaultProps = {
-    isFetching:      false,
-    isLogging:       true
+    isFetching: false,
+    isLogging: true
   };
 
   state = {
-    email:          '',
-    password:       ''
+    username: '',
+    password: '',
+    isOK: true
   };
 
 
   // #region lifecycle methods
   componentDidMount() {
-    const {
-      enterLogin,
-      // disconnectUser
-    } = this.props;
-
-    // disconnectUser(); // diconnect user: remove token and user info
+    const { enterLogin } = this.props;
     enterLogin();
   }
 
@@ -121,6 +96,11 @@ class Login extends PureComponent<Props, State> {
     const { history } = this.props;
     if (nextProps.isAuthenticated)
       history.push('/');
+    if (nextProps.syncValidation && !nextProps.syncValidation.syncErrors) {
+        this.setState({isOK: false});
+    } else {
+        this.setState({isOK: true});
+    }
   }
 
   renderField = ({ input, label, type, fieldValue, trans, meta: { touched, error, warning } }) => {
@@ -136,48 +116,32 @@ class Login extends PureComponent<Props, State> {
             {...input}
             placeholder={label}
             type={type}
-            className='form-control'
+            className="form-control"
             id={label}
             value={fieldValue}
             onChange={e => this.setState({ [input.name]: e.target.value.trim() })}
           />
-          {touched && ((error && <span>{trans(error)}</span>) || (warning && <span>{trans(warning)}</span>))}
+          {touched && ((error && <span className="text-danger">{trans(error)}</span>) ||
+              (warning && <span className="text-danger">{trans(warning)}</span>))}
         </div>
       </div>
     )
   }
 
   render() {
-    const {
-      email,
-      password
-    } = this.state;
-
-    const {
-      isLogging,
-      isError,
-      errorMessage
-    } = this.props;
-
+    const { username, password, isOK } = this.state;
+    const { isLogging, isError, errorMessage } = this.props;
     return (
       <I18n ns="translations">
         {
           (t, { i18n }) => (
-
             <div className="content">
               <Row>
-                <Col
-                  md={4}
-                  mdOffset={4}
-                  xs={10}
-                  xsOffset={1}
-                >
+                <Col md={4} mdOffset={4} xs={10} xsOffset={1}>
                   <button onClick={() => i18n.changeLanguage('en')}>en</button>
-                  <button onClick={() => i18n.changeLanguage('vn')}>vn</button>
+                  <button onClick={() => i18n.changeLanguage('vi')}>vn</button>
                   <button onClick={() => i18n.changeLanguage('ja')}>ja</button>
-                  <form
-                    className="form-horizontal"
-                    noValidate>
+                  <form className="form-horizontal" noValidate>
                     <fieldset>
                       <legend
                         className="text-center"
@@ -190,14 +154,14 @@ class Login extends PureComponent<Props, State> {
                         </h2>
                       </legend>
 
-                      <div className="text-center">{isError ? <span className="text-danger">{errorMessage}</span>: null}</div>
+                      <div className="text-center">{isError ? <span className="text-danger">{t(errorMessage)}</span>: null}</div>
 
                       <Field
-                        name="email"
-                        type="email"
+                        name="username"
+                        type="text"
                         component={this.renderField}
-                        label="Email"
-                        fieldValue={email}
+                        label="Username"
+                        fieldValue={username}
                         trans={t}
                       />
 
@@ -210,14 +174,11 @@ class Login extends PureComponent<Props, State> {
                         trans={t}
                       />
                       <div className="form-group">
-                        <Col
-                          lg={10}
-                          lgOffset={2}
-                        >
+                        <Col lg={10} lgOffset={2}>
                           <Button
                             className="login-button btn-block"
                             bsStyle="primary"
-                            disabled={isLogging}
+                            disabled={isLogging || isOK}
                             onClick={this.handlesOnLogin}>
                             {
                               isLogging
@@ -225,9 +186,7 @@ class Login extends PureComponent<Props, State> {
                                 <span>
                                   {`${t('Logging in')}...`}
                                   &nbsp;
-                                  <i
-                                    className="fa fa-spinner fa-pulse fa-fw"
-                                  />
+                                  <i className="fa fa-spinner fa-pulse fa-fw"/>
                           </span>
                           :
                           <span>
@@ -242,18 +201,12 @@ class Login extends PureComponent<Props, State> {
                 </Col>
               </Row>
               <Row>
-                <Col
-                  md={4}
-                  mdOffset={4}
-                  xs={10}
-                  xsOffset={1}
-                >
-                  <Button
-                    bsStyle="default"
-                    onClick={this.goHome}
-                  >
+                <Col md={4} mdOffset={4} xs={10} xsOffset={1}>
+                  <div className="pull-right">
+                    <Button bsStyle="default" onClick={this.goHome}>
                       {t('Back to home')}
                     </Button>
+                  </div>
                 </Col>
               </Row>
             </div>
@@ -263,31 +216,6 @@ class Login extends PureComponent<Props, State> {
   }
   // #endregion
 
-  // #region form inputs change callbacks
-  handlesOnEmailChange = (
-    event: SyntheticEvent<>
-  ) => {
-    if (event) {
-      event.preventDefault();
-      let target: Object = event.target;
-      // should add some validator before setState in real use cases
-      this.setState({ email: target.value.trim() });
-    }
-  }
-
-  handlesOnPasswordChange = (
-    event: SyntheticEvent<>
-  ) => {
-    if (event) {
-      event.preventDefault();
-      let target: Object = event.target;
-      // should add some validator before setState in real use cases
-      this.setState({ password: target.value.trim() });
-    }
-  }
-  // #endregion
-
-
   // #region on login button click callback
   handlesOnLogin = async (
     event: SyntheticEvent<>
@@ -295,18 +223,10 @@ class Login extends PureComponent<Props, State> {
     if (event) {
       event.preventDefault();
     }
-
-    const {
-      logUserIfNeeded,
-    } = this.props;
-
-    const {
-      email,
-      password
-    } = this.state;
-
+    const { logUserIfNeeded } = this.props;
+    const { username, password } = this.state;
     try {
-      logUserIfNeeded(email, password);
+      logUserIfNeeded(username, password);
     } catch (error) {
       /* eslint-disable no-console */
       console.log('login went wrong..., error: ', error);
@@ -322,11 +242,7 @@ class Login extends PureComponent<Props, State> {
     if (event) {
       event.preventDefault();
     }
-
-    const {
-      history
-    } = this.props;
-
+    const { history } = this.props;
     history.push({ pathname: '/' });
   }
   // #endregion
@@ -335,4 +251,4 @@ class Login extends PureComponent<Props, State> {
 export default reduxForm({
   form: 'syncValidation',
   validate,
-})(Login)
+})(Login);

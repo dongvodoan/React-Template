@@ -1,9 +1,17 @@
 // @flow weak
 import {
     ROOT_API_LOCAL,
+    ROOT_API_TOKUBUY,
     ROOT_API_PRODUCTION,
     ROOT_API_STAGING
 } from '../../constants/common';
+import {
+  grant_type,
+  client_id,
+  client_secret,
+  device,
+  deviceToken,
+} from '../../constants/constParams';
 
 import request from '../promisedHttpRequest';
 
@@ -17,14 +25,27 @@ if (process.env.NODE_ENV === 'development') {
     BASE_URL = ROOT_API_STAGING;
 }
 
-export const postLogin = (email, password) => {
+export const postLoginPlatform = (username, password) => {
     const url = `${BASE_URL}login`;
     const data = {
-        email,
-        password
+        grant_type,
+        client_id,
+        client_secret,
+        username,
+        password,
+        device,
     };
     return request.post(url, data);
 };
+
+export const postLoginServer = (accessToken) => {
+    const url = `${ROOT_API_TOKUBUY}login/callback-server`;
+    const data = {
+        accessToken,
+        deviceToken
+    };
+    return request.post(url, data);
+}
 
 export const postRegister = (
     username,
@@ -33,10 +54,6 @@ export const postRegister = (
     confirm_password,
 ) => {
     const url = `${BASE_URL}register`;
-    const grant_type = 'password';
-    const client_id = '1516594351305';
-    const client_secret = 'V0zbKF9ro1mIhf4Hy8i7oisyJs8X2kqm';
-    const device = 3; // 1: Android, 2: iOS, 3: Browser
     const data = {
         grant_type,
         client_id,

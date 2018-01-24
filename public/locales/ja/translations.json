@@ -24,6 +24,11 @@
   "password_confirm_is_required": "Password confirm is required",
   "password_confirm_not_match": "Password confirm does not match",
   "username_is_exist": "Username is already exist",
-  "email_is_exist": "Email is already exist"
-}
+  "email_is_exist": "Email is already exist",
+  "user_not_found_or_not_verify": "User not found or not verify",
+  "username_is_incorrect": "Username is incorrect",
+  "password_is_incorrect": "Password is incorrect",
+  "bad_request": "Bad request",
+  "access_token_is_required": "Access token is required",
+  "device_token_is_required": "Device token is required"
 }
