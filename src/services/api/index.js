@@ -66,3 +66,8 @@ export const postRegister = (
     };
     return request.post(url, data);
 };
+
+export const getUserInfo = (accessToken) => {
+    const url = `${ROOT_API_TOKUBUY}user/me`;
+    return request.get(url, accessToken);
+}

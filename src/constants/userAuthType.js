@@ -16,3 +16,4 @@ export const RECEIVED_REG_USER:              string = 'RECEIVED_REG_USER';
 export const ERROR_REG_USER:                 string = 'ERROR_REG_USER';
 export const ERROR_LOG_PLATFORM:             string = 'ERROR_LOG_PLATFORM';
 export const CHECK_IF_USER_IS_AUTHENTICATED: string = 'CHECK_IF_USER_IS_AUTHENTICATED';
+export const RECEIVED_USER_INFO:             string = 'RECEIVED_USER_INFO';
