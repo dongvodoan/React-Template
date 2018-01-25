@@ -28,7 +28,8 @@ class PageHome extends PureComponent<Props, State> {
             enterHome: PropTypes.func.isRequired,
             leaveHome: PropTypes.func.isRequired,
             disconnectUser: PropTypes.func.isRequired
-        })
+        }),
+        isAuthenticated: PropTypes.bool.isRequired,
     };
 
     componentDidMount() {
@@ -72,13 +73,13 @@ class PageHome extends PureComponent<Props, State> {
     };
 
     render() {
-        console.log('hello', this.props);
+        const { isAuthenticated } = this.props;
         return(
             <AnimatedView>
                 <div className="row">
                     <div className="col-md-12 text-center">
                         <h2 className="not-found">
-                            <div className="pull-right">
+                            <div className="pull-right" hidden={!isAuthenticated}>
                             <button
                                 title=""
                                 className="btn btn-default tooltips"

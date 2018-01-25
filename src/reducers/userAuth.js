@@ -95,7 +95,10 @@ export default function (
             };
 
         case RECEIVED_USER_INFO:
-            return localStorage.setItem(userDataKey, action.data);
+            localStorage.setItem(userDataKey, action.data);
+            return {
+                ...state
+            };
 
         case ERROR_LOG_USER:
             return {
@@ -182,5 +185,5 @@ export default function (
 
         default:
             return state;
-    }
+        }
 }

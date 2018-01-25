@@ -7,7 +7,9 @@ import PageHome               from './home';
 
 const mapStateToProps = (state) => {
     return {
-        currentView:  state.views.currentView
+        currentView:  state.views.currentView,
+
+        isAuthenticated: state.userAuth.isAuthenticated,
     };
 };
 
