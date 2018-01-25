@@ -3,19 +3,18 @@ import moment                 from 'moment';
 import auth                   from '../services/auth';
 
 import {
-  DISCONNECT_USER,
-  CHECK_IF_USER_IS_AUTHENTICATED,
-  ERROR_LOG_USER,
-  RECEIVED_LOG_USER,
-  REQUEST_LOG_USER,
-  ERROR_USER_INFOS_DATA,
-  RECEIVED_USER_INFOS_DATA,
-  REQUEST_USER_INFOS_DATA,
-  RECEIVED_REG_USER,
-  REQUEST_REG_USER,
-  ERROR_REG_USER,
-  ERROR_LOG_PLATFORM,
-  RECEIVED_USER_INFO,
+    DISCONNECT_USER,
+    CHECK_IF_USER_IS_AUTHENTICATED,
+    ERROR_LOG_USER,
+    RECEIVED_LOG_USER,
+    REQUEST_LOG_USER,
+    ERROR_USER_INFOS_DATA,
+    RECEIVED_USER_INFOS_DATA,
+    REQUEST_USER_INFOS_DATA,
+    RECEIVED_REG_USER,
+    REQUEST_REG_USER,
+    ERROR_LOG_PLATFORM,
+    RECEIVED_USER_INFO,
 } from '../constants/userAuthType'
 import { userDataKey } from "../constants/constParams";
 
@@ -114,7 +113,7 @@ export default function (
                 isLogging:            false,
                 isError:              true,
                 errorMessage:         action.msg,
-            }
+            };
 
         case REQUEST_REG_USER:
             return {
@@ -150,14 +149,6 @@ export default function (
             // temp
             return {
                 ...state
-            };
-
-        case ERROR_REG_USER:
-            return {
-                ...state,
-                actionTime:       currentTime,
-                isAccountCreated: false,
-                isLogging:        false
             };
 
         // not used right now:

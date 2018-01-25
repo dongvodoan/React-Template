@@ -17,6 +17,9 @@ const mapStateToProps = (state) => {
     errorMessage:    state.userAuth.errorMessage,
     isFetching:      state.userAuth.isFetching,
     isLogging:       state.userAuth.isLogging,
+
+    // redux form
+    syncValidation: state.form.syncValidation
   };
 };
 
