@@ -50,7 +50,7 @@ class PageHome extends PureComponent<Props, State> {
         leaveHome();
     }
 
-    handlesLogout= async (
+    handlesLogout = async (
         event: SyntheticEvent<>
     ) => {
         if (event) {
@@ -91,17 +91,18 @@ class PageHome extends PureComponent<Props, State> {
                             </div>
                             <i className="fa fa-thumbs-o-up fa-spin">
                             </i>
-                                THIS IS HOME PAGE!!!<br/>
-                            <Link to="/protected">Protected</Link><br/>
-                            <StatComponent
-                                statFaIconName="fa-refresh"
-                                statIconColor="#fa8564"
-                                statIconSpin={true}
-                                statLabel="Processing...."
-                            />
+                                {`THIS IS HOME PAGE IN ${process.env.NODE_ENV} MODE!!!`}<br/>
+                                <Link to="/protected">Protected</Link><br/>
+                                <StatComponent
+                                    statFaIconName="fa-refresh"
+                                    statIconColor="#fa8564"
+                                    statIconSpin={true}
+                                    statLabel="Processing...."
+                                />
                         </h2>
                         {/* <!--tooltips start--> */}
 
+                        <h3>{`Test enviroment var here: ${process.env.REACT_APP_TEST_VAR}`}</h3>
                         <Panel
                             title="Tooltips"
                             hasTitle={true}
