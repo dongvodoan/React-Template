@@ -26,7 +26,8 @@ class PageHome extends PureComponent<Props, State> {
     static propTypes = {
         actions: PropTypes.shape({
             enterHome: PropTypes.func.isRequired,
-            leaveHome: PropTypes.func.isRequired
+            leaveHome: PropTypes.func.isRequired,
+            disconnectUser: PropTypes.func.isRequired
         })
     };
 
@@ -54,9 +55,14 @@ class PageHome extends PureComponent<Props, State> {
         if (event) {
             event.preventDefault();
         }
-        const { actions, history } = this.props;
+        const {
+            actions: {
+                disconnectUser
+            },
+            history
+        } = this.props;
         try {
-            actions.disconnectUser();
+            disconnectUser();
             history.push('/login');
         } catch (error) {
             /* eslint-disable no-console */

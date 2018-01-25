@@ -9,7 +9,6 @@ import { I18n }                 from 'react-i18next';
 import ReactModal               from 'react-modal';
 import { modalStyles }          from '../../styles';
 import { validate }             from './validation';
-import auth                     from '../../services/auth';
 // import auth                  from '../../services/auth';
 // #endregion
 
@@ -94,8 +93,8 @@ class Register extends PureComponent<Props, State> {
 
   // #region lifecycle methods
   componentDidMount() {
-    const { enterRegister, history } = this.props;
-    if(auth.getToken()) {
+    const { enterRegister, history, isAuthenticated} = this.props;
+    if(isAuthenticated) {
         history.push('/');
     }
     else {
