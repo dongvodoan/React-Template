@@ -96,8 +96,7 @@ export default function (
             };
 
         case RECEIVED_USER_INFO:
-            console.log()
-            localStorage.setItem(userDataKey, action.data);
+            return localStorage.setItem(userDataKey, action.data);
 
         case ERROR_LOG_USER:
             return {
