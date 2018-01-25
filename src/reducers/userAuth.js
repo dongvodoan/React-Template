@@ -14,7 +14,9 @@ import {
     RECEIVED_REG_USER,
     REQUEST_REG_USER,
     ERROR_LOG_PLATFORM,
+    RECEIVED_USER_INFO,
 } from '../constants/userAuthType'
+import { userDataKey } from "../constants/constParams";
 
 // --------------------------------
 // REDUCER
@@ -64,7 +66,7 @@ export default function (
                 ...state,
                 actionTime:      currentTime,
                 isAuthenticated: false,
-                isError: false,
+                isError:         false,
                 token:           initialState.token,
                 id:              initialState.id,
                 login:           initialState.login,
@@ -81,39 +83,23 @@ export default function (
             };
 
         case RECEIVED_LOG_USER:
-            const userLogged = action.data;
-            if (userLogged.status === 200) {
-                auth.setToken(userLogged.data);
-                return {
-                    ...state,
-                    actionTime:      currentTime,
-                    isAuthenticated: true,
-                    token:           userLogged.data,
-                    // id:              userLogged.id,
-                    // login:           userLogged.login,
-                    // firstname:       userLogged.firstname,
-                    // lastname:        userLogged.lastname,
-                    isError: false,
-                    errorMessage: '',
-                    isLogging:       false
-                };
-            }
+            auth.setToken(action.data);
+            return {
+                ...state,
+                actionTime:      currentTime,
+                isAuthenticated: true,
+                token:           action.data,
+                isError: false,
+                errorMessage: '',
+                isLogging:       false
+            };
 
-            if (userLogged.status === 422 || userLogged.status === 400) {
-                return {
-                    ...state,
-                    actionTime:      currentTime,
-                    isAuthenticated: false,
-                    isError:      true,
-                    errorMessage:    userLogged.message,
-                    isLogging:       false
-                };
-            }
-
-            // temp
+        case RECEIVED_USER_INFO:
+            localStorage.setItem(userDataKey, action.data);
             return {
                 ...state
             };
+
         case ERROR_LOG_USER:
             return {
                 ...state,
@@ -199,5 +185,5 @@ export default function (
 
         default:
             return state;
-    }
+        }
 }

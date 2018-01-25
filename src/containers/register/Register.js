@@ -67,6 +67,7 @@ class Register extends PureComponent<Props, State> {
 
     // userAuth:
     isAuthenticated:  PropTypes.bool,
+    isAccountCreated: PropTypes.bool,
     isError:          PropTypes.bool,
     errorMessage:     PropTypes.string,
     isFetching:       PropTypes.bool,
@@ -93,8 +94,13 @@ class Register extends PureComponent<Props, State> {
 
   // #region lifecycle methods
   componentDidMount() {
-    const { enterRegister } = this.props;
-    enterRegister();
+    const { enterRegister, history, isAuthenticated} = this.props;
+    if(isAuthenticated) {
+        history.push('/');
+    }
+    else {
+        enterRegister();
+    }
   }
 
   componentWillUnmount() {
