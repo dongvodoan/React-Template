@@ -1,32 +1,24 @@
 // @flow weak
 import {
-    ROOT_API_LOCAL,
-    ROOT_API_TOKUBUY,
-    ROOT_API_PRODUCTION,
-    ROOT_API_STAGING
-} from '../../constants/common';
-import {
   grant_type,
   client_id,
   client_secret,
   device,
   deviceToken,
-} from '../../constants/constParams';
+} from '../../constants/common';
 
 import request from '../promisedHttpRequest';
 
-let BASE_URL = '';
+let BASE_URL_TOKUBUY = process.env.REACT_APP_ROOT_API_TOKUBUY;
+let BASE_URL_PLATFORM = process.env.REACT_APP_ROOT_API_PLATFORM;
 
-if (process.env.NODE_ENV === 'development') {
-    BASE_URL = ROOT_API_LOCAL;
-} else if (process.env.NODE_ENV === 'production') {
-    BASE_URL = ROOT_API_PRODUCTION;
-} else {
-    BASE_URL = ROOT_API_STAGING;
+if (process.env.REACT_APP_ENV === 'staging') {
+    BASE_URL_TOKUBUY = process.env.REACT_APP_ROOT_API_STG_TOKUBUY;
+    BASE_URL_PLATFORM = process.env.REACT_APP_ROOT_API_STG_PLATFORM;
 }
 
 export const postLoginPlatform = (username, password) => {
-    const url = `${BASE_URL}login`;
+    const url = `${BASE_URL_PLATFORM}login`;
     const data = {
         grant_type,
         client_id,
@@ -39,7 +31,7 @@ export const postLoginPlatform = (username, password) => {
 };
 
 export const postLoginServer = (accessToken) => {
-    const url = `${ROOT_API_TOKUBUY}login/callback-server`;
+    const url = `${BASE_URL_TOKUBUY}login/callback-server`;
     const data = {
         accessToken,
         deviceToken
@@ -53,7 +45,7 @@ export const postRegister = (
     password,
     confirm_password,
 ) => {
-    const url = `${BASE_URL}register`;
+    const url = `${BASE_URL_PLATFORM}register`;
     const data = {
         grant_type,
         client_id,
@@ -68,6 +60,6 @@ export const postRegister = (
 };
 
 export const getUserInfo = (accessToken) => {
-    const url = `${ROOT_API_TOKUBUY}user/me`;
+    const url = `${BASE_URL_TOKUBUY}user/me`;
     return request.get(url, accessToken);
 }

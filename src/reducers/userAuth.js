@@ -16,7 +16,7 @@ import {
     ERROR_LOG_PLATFORM,
     RECEIVED_USER_INFO,
 } from '../constants/userAuthType'
-import { userDataKey } from "../constants/constParams";
+import { userDataKey } from "../constants/common";
 
 // --------------------------------
 // REDUCER

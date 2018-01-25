@@ -15,6 +15,7 @@ import 'bootstrap/dist/css/bootstrap-theme.css';
 import 'bootstrap/dist/js/bootstrap.js';
 import './i18n';
 import registerServiceWorker from './registerServiceWorker';
+require('dotenv').config();
 // #endregion
 
 const ELEMENT_TO_BOOTSTRAP: string  = 'root';

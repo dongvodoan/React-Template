@@ -6,6 +6,7 @@
     "animate.css": "^3.5.2",
     "bootstrap": "^3.3.7",
     "classnames": "^2.2.5",
+    "dotenv": "^4.0.0",
     "flow-bin": "^0.63.1",
     "font-awesome": "^4.7.0",
     "history": "^4.7.2",
