@@ -48,15 +48,43 @@ class PageHome extends PureComponent<Props, State> {
         leaveHome();
     }
 
+    handlesLogout= async (
+        event: SyntheticEvent<>
+    ) => {
+        if (event) {
+            event.preventDefault();
+        }
+        const { actions, history } = this.props;
+        try {
+            actions.disconnectUser();
+            history.push('/login');
+        } catch (error) {
+            /* eslint-disable no-console */
+            console.log('login went wrong..., error: ', error);
+            /* eslint-enable no-console */
+        }
+    };
+
     render() {
+        console.log('hello', this.props);
         return(
             <AnimatedView>
                 <div className="row">
                     <div className="col-md-12 text-center">
                         <h2 className="not-found">
+                            <div className="pull-right">
+                            <button
+                                title=""
+                                className="btn btn-default tooltips"
+                                type="button"
+                                onClick={this.handlesLogout}
+                            >
+                                Log out
+                            </button>
+                            </div>
                             <i className="fa fa-thumbs-o-up fa-spin">
                             </i>
-                            THIS IS HOME PAGE!!!<br/>
+                                THIS IS HOME PAGE!!!<br/>
                             <Link to="/protected">Protected</Link><br/>
                             <StatComponent
                                 statFaIconName="fa-refresh"
@@ -66,6 +94,7 @@ class PageHome extends PureComponent<Props, State> {
                             />
                         </h2>
                         {/* <!--tooltips start--> */}
+
                         <Panel
                             title="Tooltips"
                             hasTitle={true}

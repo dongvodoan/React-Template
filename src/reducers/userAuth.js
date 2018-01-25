@@ -66,7 +66,7 @@ export default function (
                 ...state,
                 actionTime:      currentTime,
                 isAuthenticated: false,
-                isError: false,
+                isError:         false,
                 token:           initialState.token,
                 id:              initialState.id,
                 login:           initialState.login,

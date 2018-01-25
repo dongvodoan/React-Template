@@ -2,6 +2,7 @@
 import { bindActionCreators } from 'redux';
 import { connect }            from 'react-redux';
 import * as viewActions       from '../../actions/viewAction';
+import * as userAuthActions   from '../../actions/userAuthAction';
 import PageHome               from './home';
 
 const mapStateToProps = (state) => {
@@ -15,7 +16,9 @@ const mapDispatchToProps = (dispatch) => {
         actions : bindActionCreators(
             {
                 //  containers
-                ...viewActions
+                ...viewActions,
+                // userAuth:
+                ...userAuthActions
             },
             dispatch)
     };
