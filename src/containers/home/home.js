@@ -56,7 +56,7 @@ class PageHome extends PureComponent<Props, State> {
                         <h2 className="not-found">
                             <i className="fa fa-thumbs-o-up fa-spin">
                             </i>
-                            THIS IS HOME PAGE!!!<br/>
+                            THIS IS HOME PAGE {process.env.REACT_APP_DOMAIN}!!!<br/>
                             <Link to="/protected">Protected</Link><br/>
                             <StatComponent
                                 statFaIconName="fa-refresh"
