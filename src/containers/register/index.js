@@ -12,6 +12,7 @@ const mapStateToProps = (state) => {
     currentView:  state.views.currentView,
 
     // useAuth:
+    isAuthenticated: state.userAuth.isAuthenticated,
     isAccountCreated:state.userAuth.isAccountCreated,
     isError:         state.userAuth.isError,
     errorMessage:    state.userAuth.errorMessage,

@@ -26,8 +26,10 @@ class PageHome extends PureComponent<Props, State> {
     static propTypes = {
         actions: PropTypes.shape({
             enterHome: PropTypes.func.isRequired,
-            leaveHome: PropTypes.func.isRequired
-        })
+            leaveHome: PropTypes.func.isRequired,
+            disconnectUser: PropTypes.func.isRequired
+        }),
+        isAuthenticated: PropTypes.bool.isRequired,
     };
 
     componentDidMount() {
@@ -48,15 +50,48 @@ class PageHome extends PureComponent<Props, State> {
         leaveHome();
     }
 
+    handlesLogout= async (
+        event: SyntheticEvent<>
+    ) => {
+        if (event) {
+            event.preventDefault();
+        }
+        const {
+            actions: {
+                disconnectUser
+            },
+            history
+        } = this.props;
+        try {
+            disconnectUser();
+            history.push('/login');
+        } catch (error) {
+            /* eslint-disable no-console */
+            console.log('login went wrong..., error: ', error);
+            /* eslint-enable no-console */
+        }
+    };
+
     render() {
+        const { isAuthenticated } = this.props;
         return(
             <AnimatedView>
                 <div className="row">
                     <div className="col-md-12 text-center">
                         <h2 className="not-found">
+                            <div className="pull-right" hidden={!isAuthenticated}>
+                            <button
+                                title=""
+                                className="btn btn-default tooltips"
+                                type="button"
+                                onClick={this.handlesLogout}
+                            >
+                                Log out
+                            </button>
+                            </div>
                             <i className="fa fa-thumbs-o-up fa-spin">
                             </i>
-                            THIS IS HOME PAGE!!!<br/>
+                                THIS IS HOME PAGE!!!<br/>
                             <Link to="/protected">Protected</Link><br/>
                             <StatComponent
                                 statFaIconName="fa-refresh"
@@ -66,6 +101,7 @@ class PageHome extends PureComponent<Props, State> {
                             />
                         </h2>
                         {/* <!--tooltips start--> */}
+
                         <Panel
                             title="Tooltips"
                             hasTitle={true}
