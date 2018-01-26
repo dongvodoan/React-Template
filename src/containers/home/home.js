@@ -12,7 +12,7 @@ import {
     Panel,
     Label,
     Badges,
-    ProgressBar
+    ProgressBar,
 }                         from '../../components';
 
 // #region flow types
@@ -102,7 +102,6 @@ class PageHome extends PureComponent<Props, State> {
                         </h2>
                         {/* <!--tooltips start--> */}
 
-                        <h3>{`Test enviroment var here: ${process.env.REACT_APP_TEST_VAR}`}</h3>
                         <Panel
                             title="Tooltips"
                             hasTitle={true}
