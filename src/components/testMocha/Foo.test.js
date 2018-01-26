@@ -13,7 +13,7 @@ describe("A suite", function() {
   });
 
   it("contains spec with an expectation", function() {
-    expect(mount(<Foo />).find('.foo').length).to.equal(2);
+    expect(shallow(<Foo />).find('.foo').length).to.equal(1);
   });
 
   it("contains spec with 2 div", function() {

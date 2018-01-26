@@ -37,7 +37,7 @@ class PageHome extends PureComponent<Props, State> {
             actions: {
                 enterHome
             }
-        } =  this.props;
+        } = this.props;
         enterHome();
     }
 

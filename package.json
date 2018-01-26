@@ -39,7 +39,7 @@
   "scripts": {
     "start": "PORT=3006 react-scripts start",
     "build": "react-scripts build",
-    "test": "mocha src/config/.setup.js src/components/**/*.test.js",
+    "test": "mocha src/config/.setup.js src/**/*.test.js",
     "eject": "react-scripts eject",
     "flow": "flow"
   },
