@@ -39,8 +39,19 @@
   "scripts": {
     "start": "PORT=3006 react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test --env=jsdom",
+    "test": "mocha src/config/.setup.js src/**/*.test.js",
     "eject": "react-scripts eject",
     "flow": "flow"
+  },
+  "devDependencies": {
+    "react-test-renderer": "^16.2.0",
+    "babel": "^6.3.26",
+    "babel-preset-airbnb": "^1.0.1",
+    "babel-register": "^6.4.3",
+    "chai": "^3.5.0",
+    "enzyme": "^2.0.0",
+    "jsdom": "^8.0.1",
+    "mocha": "^2.4.5",
+    "react-addons-test-utils": "^0.14.7"
   }
 }
