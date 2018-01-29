@@ -20,6 +20,7 @@ import {
 import Login                    from './containers/login/index';
 import Home                     from './containers/home';
 import Register                 from './containers/register';
+import ChatBox                  from './components/chatBox/chatBox';
 
 const store = configureStore();
 
@@ -41,6 +42,7 @@ class App extends Component<Props, State> {
                                 <Route exact path="/" component={Home}/>
                                 <Route path="/login" component={Login} />
                                 <Route path="/register" component={Register} />
+                                <Route path="/chat" component={ChatBox} />
                                 <PrivateRoute path="/protected" component={PageProtected} />
                                 <Route component={PageNotFound} />
                             </Switch>
