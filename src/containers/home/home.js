@@ -13,6 +13,11 @@ import {
     Label,
     Badges,
     ProgressBar,
+    MaterialButton,
+    MaterialAlert,
+    MaterialDropDownMenu,
+    MaterialProgress,
+    MaterialTextField,
 }                         from '../../components';
 
 // #region flow types
@@ -102,6 +107,12 @@ class PageHome extends PureComponent<Props, State> {
                         </h2>
                         {/* <!--tooltips start--> */}
 
+                        <h3>Material components here</h3>
+                        <MaterialButton label="My material button" /><br/>
+                        <MaterialAlert/><br/>
+                        <MaterialDropDownMenu/><br/>
+                        <MaterialProgress/><br/>
+                        <MaterialTextField/><br/>
                         <Panel
                             title="Tooltips"
                             hasTitle={true}
