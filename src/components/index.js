@@ -18,3 +18,8 @@ export {
     TabPanelBodyContent,
     TabPanelDemo
 }                                     from './tabPanel';
+export { default as MaterialButton }  from './material/Button';
+export { default as MaterialAlert }  from './material/Alert';
+export { default as MaterialDropDownMenu }  from './material/DropDownMenu';
+export { default as MaterialProgress }  from './material/Progress';
+export { default as MaterialTextField }  from './material/TextField';
