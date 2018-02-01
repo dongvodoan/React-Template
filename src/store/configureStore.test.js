@@ -1,12 +1,10 @@
 import {
   createStore,
-  combineReducers,
   compose,
   applyMiddleware
 } from 'redux'
 import {
-  reactReduxFirebase,
-  firebaseReducer
+  reactReduxFirebase
 } from 'react-redux-firebase'
 import { createLogger } from 'redux-logger';
 import { routerMiddleware }     from 'react-router-redux';
